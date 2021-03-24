@@ -1,0 +1,19 @@
+<div class="recipes-home">
+  <div class="title">
+    <h1>Recipes</h1>
+  </div>
+
+  <!-- <label class="switch">
+    <input type="checkbox">
+    <span class="slider round"></span>
+  </label> -->
+  <div class="filtering-switch"> <!--TODO: render styles before texts are shown-->
+    <p>Filter by</p>
+    <switch-button
+      [(switchValue)]="filterByValue"
+      [options]="filterOptions"
+      (switchValueChange)="onSarchByValueChanged()">
+    </switch-button>
+  </div>
+</div>
+<router-outlet></router-outlet>
