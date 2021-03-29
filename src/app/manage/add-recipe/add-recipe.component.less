@@ -1,0 +1,81 @@
+.add-new-recipe {
+  h2 {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .recipe-items {
+    margin-top: 20px;
+  }
+
+  .form-inline label + input {
+    margin-left: 20px;
+  }
+
+  p.item-name {
+    margin-bottom: 0.5rem;
+  }
+
+  .table {
+    color: rgb(66, 66, 66);
+    th {
+      font-weight: normal;
+    }
+    td {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .arrow {
+      position: relative;
+      top: 0;
+      left: 20%;
+      margin: 0;
+      height: 19px;
+      width: 19px;
+    }
+    .up {
+      height: 15px;
+      width: 8px;
+      top: -10px;
+      left: 10%;
+      position: absolute;
+      border: 8px solid transparent;
+      border-bottom: 8px solid rgb(66, 66, 66);
+    }
+    .down {
+      height: 15px;
+      width: 8px;
+      top: 15px;
+      left: 10%;
+      position: absolute;
+      border: 8px solid transparent;
+      border-top: 8px solid rgb(66, 66, 66);
+    }
+
+    .up:not(.arrow-disabled):hover {
+      cursor: pointer;
+      transition: all 0.3s;
+      border-bottom: 8px solid black;
+    }
+    .down:not(.arrow-disabled):hover {
+      cursor: pointer;
+      transition: all 0.3s;
+      border-top: 8px solid black;
+    }
+
+    .up.arrow-disabled {
+      border-bottom: 8px solid rgba(224, 221, 221, 0.8);
+    }
+
+    .down.arrow-disabled {
+      border-top: 8px solid rgba(224, 221, 221, 0.8);
+    }
+
+    .highlight {
+      background-color: rgb(212, 247, 171);
+    }
+
+  }
+
+}
+

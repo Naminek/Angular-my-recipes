@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { RoutingService } from '../routing.service';
+import { RecipesService } from './recipes.service';
 
 @Component({
   selector: 'app-recipes',
@@ -15,7 +16,8 @@ export class RecipesComponent implements OnInit {
   constructor(
     public router: Router,
     // private route: ActivatedRoute
-    private routingService: RoutingService
+    private routingService: RoutingService,
+    private recipesService: RecipesService
     )
   {
     this.filterByValue = routingService.recipesRouterLink == 'ingredients-filter';
@@ -45,6 +47,12 @@ export class RecipesComponent implements OnInit {
 
 
   ngOnInit(): void {
+    console.log(this.recipesService.recipes);
+    this.recipesService.recipes.subscribe(
+      (res: any) => {
+        console.log(res);
+      }
+    )
 
   }
 

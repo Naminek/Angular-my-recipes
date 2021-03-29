@@ -1,8 +1,9 @@
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
 // import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 import { AddRecipeComponent } from './manage/add-recipe/add-recipe.component';
@@ -26,13 +27,15 @@ import { environment } from 'src/environments/environment';
     RecipesComponent,
     SwitchButtonComponent,
     IngredientsComponent,
-    RecipeListComponent,
+    RecipeListComponent
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
     FormsModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig)
+    ReactiveFormsModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireDatabaseModule
   ],
   providers: [],
   bootstrap: [AppComponent]
