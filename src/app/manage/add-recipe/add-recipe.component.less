@@ -4,7 +4,7 @@
     margin-bottom: 40px;
   }
   .recipe-items {
-    margin-top: 20px;
+    margin-top: 30px;
   }
 
   .form-inline label + input {
@@ -13,6 +13,34 @@
 
   p.item-name {
     margin-bottom: 0.5rem;
+  }
+
+  .img-area {
+    border: dotted 2px rgb(66, 66, 66);
+    position: relative;
+    width: 100%;
+    text-align: center;
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .no-img-message {
+      font-size: smaller;
+      font-style: italic;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+    }
+  }
+  .img-area:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
   }
 
   .table {

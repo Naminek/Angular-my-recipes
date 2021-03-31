@@ -7,38 +7,48 @@
         <input class="form-control" formControlName="title" type="text" id="titleInput">
       </div>
     </div>
-
-    <div class="recipe-items" formArrayName="ingredients">
-      <p class="font-weight-bold item-name">Ingredients</p>
-      <table class="table table-hover table-sm">
-        <thead>
-          <tr>
-            <th scope="col" style="width: 10%;"></th>
-            <th scope="col" style="width: 40%;">Item</th>
-            <th scope="col" style="width: 40%;">Amount</th>
-            <th scope="col" style="width: 10%;"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let ingredientsControl of ingredientsControls; let i = index;" [formGroupName]="i">
-            <td>
-              <div class="arrow">
-                <div class="up" [ngClass]="{ 'arrow-disabled': i == 0 }"></div>
-                <div class="down" [ngClass]="{ 'arrow-disabled': i == ingredientsControls.length - 1 }"></div>
-              </div>
-            </td>
-            <td><input class="form-control form-control-sm" formControlName="name" type="text"></td>
-            <td><input class="form-control form-control-sm" formControlName="amount" type="text"></td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-secondary btn-sm"
-                (click)="deleteIngredientsRow(i)">×</button>
-            </td>
-          </tr>
-          <tr><td colspan="4"><button type="button" class="btn btn-secondary btn-sm" (click)="onAddIngredientsClick()">+</button></td></tr>
-        </tbody>
-      </table>
+    <div class="row">
+      <div class="recipe-items col-8" formArrayName="ingredients">
+        <p class="font-weight-bold item-name">Ingredients</p>
+        <table class="table table-hover table-sm">
+          <thead>
+            <tr>
+              <th scope="col" style="width: 10%;"></th>
+              <th scope="col" style="width: 40%;">Item</th>
+              <th scope="col" style="width: 40%;">Amount</th>
+              <th scope="col" style="width: 10%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ingredientsControl of ingredientsControls; let i = index;" [formGroupName]="i" [id]="'ingredients' + i">
+              <td>
+                <div class="arrow">
+                  <div class="up" (click)="onUpIngredients(i)" [ngClass]="{ 'arrow-disabled': i == 0 }"></div>
+                  <div class="down" (click)="onDownIngredients(i)" [ngClass]="{ 'arrow-disabled': i == ingredientsControls.length - 1 }"></div>
+                </div>
+              </td>
+              <td><input class="form-control form-control-sm" formControlName="name" type="text"></td>
+              <td><input class="form-control form-control-sm" formControlName="amount" type="text"></td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-sm"
+                  (click)="deleteIngredientsRow(i)">×</button>
+              </td>
+            </tr>
+            <tr><td colspan="4"><button type="button" class="btn btn-secondary btn-sm" (click)="onAddIngredientsClick()">+</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="recipe-items col-4">
+        <!-- <label for="file">Image</label> -->
+        <label for="uploadFiles" class="btn btn-outline-secondary btn-sm">Select a File</label>
+        <input type="file" (change)="onFileSelected($event)" id="uploadFiles" accept=".png,.jpg" style="display:none;" />
+        <div class="img-area">
+          <img *ngIf="imgTempUrl" [src]="imgTempUrl" alt="">
+          <div *ngIf="!imgTempUrl" class="no-img-message">No image is selected</div>
+        </div>
+      </div>
     </div>
 
     <div class="recipe-items" formArrayName="steps">

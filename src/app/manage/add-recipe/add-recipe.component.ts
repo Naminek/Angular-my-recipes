@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireStorage } from '@angular/fire/storage';
 import { AbstractControl, FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { finalize } from 'rxjs/operators';
+import { FileUpload } from 'src/app/data.model';
+import { FileUploadService } from 'src/app/file-upload.service';
 
 @Component({
   selector: 'app-add-recipe',
@@ -10,6 +15,10 @@ export class AddRecipeComponent implements OnInit {
   recipeForm!: FormGroup;
   ingredients!: FormArray;
   steps!: FormArray;
+  selectedFiles!: FileList;
+  currentFileUpload!: FileUpload;
+  percentage!: number;
+  imgTempUrl: string | ArrayBuffer | null = '';
 
   get ingredientsControls() {
     return (this.recipeForm.get('ingredients') as FormArray).controls;
@@ -19,7 +28,10 @@ export class AddRecipeComponent implements OnInit {
     return (this.recipeForm.get('steps') as FormArray).controls;
   }
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private storage: AngularFireStorage,
+    private fileUploadService: FileUploadService) { }
 
   ngOnInit(): void {
     this.recipeForm = this.formBuilder.group({
@@ -44,7 +56,17 @@ export class AddRecipeComponent implements OnInit {
     // })
   }
 
-  changeStepsTableRowColor(index: number) {
+  changeIngredientsTableRowColor(index: number): void {
+    const row = document.getElementById('ingredients' + index);
+    if (row) {
+      row.classList.add('highlight');
+      setTimeout(function() {
+        row.classList.remove('highlight');
+      }, 600)
+    }
+  }
+
+  changeStepsTableRowColor(index: number): void {
     const row = document.getElementById('step' + index);
     if (row) {
       row.classList.add('highlight');
@@ -68,24 +90,46 @@ export class AddRecipeComponent implements OnInit {
     });
   }
 
-  deleteIngredientsRow(index: number) {
+  deleteIngredientsRow(index: number): void {
     console.log(this.ingredientsControls)
     this.ingredientsControls.splice(index, 1);
   }
 
-  deleteStepsRow(index: number) {
+  deleteStepsRow(index: number): void {
     this.stepsControls.splice(index, 1);
   }
 
-  onAddIngredientsClick() {
+  onAddIngredientsClick(): void {
     this.ingredientsControls.push(this.createIngredientsForm());
   }
 
-  onAddStepsClick() {
+  onAddRecipe(): void {
+    this.fileUploadService.pushFileToStorage(this.currentFileUpload).subscribe(
+      percentage => {
+        console.log(percentage);
+        if (percentage)
+          this.percentage = Math.round(percentage);
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
+  onAddStepsClick(): void {
     this.stepsControls.push(this.createStepsForm());
   }
 
-  onDownStep(index: number) {
+  onDownIngredients(index: number): void {
+    if (index == 0)
+      return;
+    const item = this.ingredientsControls[index];
+    this.ingredientsControls.splice(index, 1); // remove item from the array.
+    this.ingredientsControls.splice(index + 1, 0, item); // add the item to the array.
+    this.changeIngredientsTableRowColor(index);
+  }
+
+  onDownStep(index: number): void {
     if (index == this.stepsControls.length - 1)
       return;
     const item = this.stepsControls[index];
@@ -94,7 +138,31 @@ export class AddRecipeComponent implements OnInit {
     this.changeStepsTableRowColor(index);
   }
 
-  onUpStep(index: number) {
+  onFileSelected(event: any): void {
+    this.selectedFiles = event.target.files;
+    if (this.selectedFiles.length !== 1)
+      return;
+    const file = this.selectedFiles[0];
+
+    const reader = new FileReader();
+    reader.readAsDataURL(this.selectedFiles[0]);
+    reader.onload = (_event) => {
+        this.imgTempUrl = reader.result;
+    }
+
+    this.currentFileUpload = new FileUpload(file);
+  }
+
+  onUpIngredients(index: number): void {
+    if (index == 0)
+      return;
+    const item = this.ingredientsControls[index];
+    this.ingredientsControls.splice(index, 1);
+    this.ingredientsControls.splice(index - 1, 0, item);
+    this.changeIngredientsTableRowColor(index);
+  }
+
+  onUpStep(index: number): void {
     if (index == 0)
       return;
     const item = this.stepsControls[index];
