@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { AbstractControl, FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FileUpload } from 'src/app/data.model';
 import { FileUploadService } from 'src/app/file-upload.service';
 
@@ -12,13 +10,18 @@ import { FileUploadService } from 'src/app/file-upload.service';
   styleUrls: ['./add-recipe.component.less']
 })
 export class AddRecipeComponent implements OnInit {
-  recipeForm!: FormGroup;
-  ingredients!: FormArray;
-  steps!: FormArray;
-  selectedFiles!: FileList;
   currentFileUpload!: FileUpload;
-  percentage!: number;
   imgTempUrl: string | ArrayBuffer | null = '';
+  ingredients!: FormArray;
+  percentage!: number;
+  selectedFiles!: FileList;
+  steps!: FormArray;
+  submitted: boolean = false;
+  recipeForm!: FormGroup;
+
+  get categoriesControls() {
+    return (this.recipeForm.get('categories') as FormGroup).controls;
+  }
 
   get ingredientsControls() {
     return (this.recipeForm.get('ingredients') as FormArray).controls;
@@ -28,19 +31,33 @@ export class AddRecipeComponent implements OnInit {
     return (this.recipeForm.get('steps') as FormArray).controls;
   }
 
+  get titleControl() {
+    return (this.recipeForm.get('title') as FormControl);
+  }
+
   constructor(
     private formBuilder: FormBuilder,
-    private storage: AngularFireStorage,
     private fileUploadService: FileUploadService) { }
 
   ngOnInit(): void {
     this.recipeForm = this.formBuilder.group({
-      title: '',
+      title: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(50),
+        // forbiddenNameValidator(/bob/i) // <-- Here's how you pass in the custom validator.
+      ]),
       ingredients: this.formBuilder.array([this.createIngredientsForm()]),
       steps: this.formBuilder.array([this.createStepsForm()]),
       comments: '',
-      tags: ''
+      categories: this.formBuilder.group({
+        meat: false,
+        seafood: false,
+        vegetarian: false,
+        vegan: false,
+        sweets: false
+      })
     });
+    console.log(this.recipeForm)
 
     this.ingredientsControls.forEach(control => {
       control.valueChanges.subscribe(x => {
@@ -97,6 +114,17 @@ export class AddRecipeComponent implements OnInit {
 
   deleteStepsRow(index: number): void {
     this.stepsControls.splice(index, 1);
+  }
+
+  getTitleTooltipCondition() {
+    return (this.submitted && this.titleControl.invalid)
+      || (this.titleControl.touched && this.titleControl.invalid);
+  }
+
+
+  onAddClick(): void {
+    console.log(this.recipeForm);
+    this.submitted = true;
   }
 
   onAddIngredientsClick(): void {
