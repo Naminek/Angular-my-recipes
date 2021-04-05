@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { FileUpload } from 'src/app/data.model';
 import { FileUploadService } from 'src/app/file-upload.service';
+import { ValidationService } from 'src/app/validation.service';
 
 @Component({
   selector: 'app-add-recipe',
@@ -11,7 +12,6 @@ import { FileUploadService } from 'src/app/file-upload.service';
 export class AddRecipeComponent implements OnInit {
   currentFileUpload!: FileUpload;
   imgTempUrl: string | ArrayBuffer | null = '';
-  ingredients!: FormArray;
   percentage!: number;
   selectedFiles!: FileList;
   steps!: FormArray;
@@ -40,7 +40,8 @@ export class AddRecipeComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private fileUploadService: FileUploadService) { }
+    private fileUploadService: FileUploadService,
+    private validationService: ValidationService) { }
 
   ngOnInit(): void {
     this.recipeForm = this.formBuilder.group({
@@ -48,7 +49,9 @@ export class AddRecipeComponent implements OnInit {
         Validators.required,
         Validators.maxLength(50),
       ]),
-      ingredients: this.formBuilder.array([this.createIngredientsForm()]),
+      ingredients: this.formBuilder.array(
+        [this.createIngredientsForm()],
+        this.validationService.minLengthArray(1)),
       steps: this.formBuilder.array([this.createStepsForm()]),
       comments: '',
       categories: this.formBuilder.group({
@@ -58,7 +61,7 @@ export class AddRecipeComponent implements OnInit {
         vegan: false,
         sweets: false
       },
-      { validators: [this.categoriesValidator] })
+      { validators: [this.validationService.minSelectionObject(1)] })
     });
     console.log(this.recipeForm)
 
@@ -76,18 +79,6 @@ export class AddRecipeComponent implements OnInit {
     // })
   }
 
-  private categoriesValidator(formGroup: FormGroup) {
-    const valid = Object.values(formGroup.value).some(value => {
-      return value;
-    });
-    console.log(valid)
-    if (valid)
-      return null;
-    else {
-      formGroup.setErrors({'incorrect': true});
-      return formGroup;
-    }
-  }
 
   changeIngredientsTableRowColor(index: number): void {
     const row = document.getElementById('ingredients' + index);
@@ -141,7 +132,6 @@ export class AddRecipeComponent implements OnInit {
     return (this.submitted && this.titleControl.invalid)
       || (this.titleControl.touched && this.titleControl.invalid);
   }
-
 
   onAddClick(): void {
     console.log(this.recipeForm);
