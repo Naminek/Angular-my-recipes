@@ -115,11 +115,19 @@ export class AddRecipeComponent implements OnInit {
   }
 
   deleteIngredientsRow(index: number): void {
+    if (this.ingredientsControls.length == 1) {
+      this.ingredientsControls.splice(0, 1, this.createIngredientsForm());
+      return;
+    }
     console.log(this.ingredientsControls)
     this.ingredientsControls.splice(index, 1);
   }
 
   deleteStepsRow(index: number): void {
+    if (this.stepsControls.length == 1) {
+      this.stepsControls.splice(0, 1, this.createStepsForm());
+      return;
+    }
     this.stepsControls.splice(index, 1);
   }
 
