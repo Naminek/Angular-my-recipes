@@ -42,13 +42,16 @@
   }
 
   .category {
-    .btn {
-      width: 100px;
-    }
-    .btn:not(.active):hover {
-      color: white;
-      border-color: @category-button-hover-color;
-      background-color: @category-button-hover-color;
+    .button-group {
+      width: 500px;
+      .btn {
+        width: 100px;
+      }
+      .btn:not(.active):hover {
+        color: white;
+        border-color: @category-button-hover-color;
+        background-color: @category-button-hover-color;
+      }
     }
   }
 
@@ -117,8 +120,14 @@
 
   input.ng-touched.ng-invalid,
   .submitted input.ng-invalid {
-    box-shadow: 0 0 0 0.2rem rgba(235, 76, 76, 0.7)
+    box-shadow: 0 0 0.2rem 0.2rem rgba(235, 76, 76, 0.7)
   }
+
+  .category.ng-touched.ng-invalid .button-group label,
+  .submitted .category.ng-invalid .button-group label {
+    box-shadow: 0 0 0.2rem 0.2rem rgba(235, 76, 76, 0.7)
+  }
+
   // /* Show red border when stuff has been typed in, but its invalid */
   // .ng-dirty.ng-invalid {
   //   border-color: red;

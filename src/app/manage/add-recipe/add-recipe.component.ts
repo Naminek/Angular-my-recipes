@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFireStorage } from '@angular/fire/storage';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FileUpload } from 'src/app/data.model';
 import { FileUploadService } from 'src/app/file-upload.service';
@@ -19,20 +18,24 @@ export class AddRecipeComponent implements OnInit {
   submitted: boolean = false;
   recipeForm!: FormGroup;
 
-  get categoriesControls() {
+  get categories() {
+    return this.recipeForm.get('categories') as FormGroup;
+  }
+
+  get categoriesControls(): {[key: string]: AbstractControl} {
     return (this.recipeForm.get('categories') as FormGroup).controls;
   }
 
-  get ingredientsControls() {
+  get ingredientsControls(): AbstractControl[] {
     return (this.recipeForm.get('ingredients') as FormArray).controls;
   }
 
-  get stepsControls() {
+  get stepsControls(): AbstractControl[] {
     return (this.recipeForm.get('steps') as FormArray).controls;
   }
 
-  get titleControl() {
-    return (this.recipeForm.get('title') as FormControl);
+  get titleControl(): FormControl {
+    return this.recipeForm.get('title') as FormControl;
   }
 
   constructor(
@@ -44,7 +47,6 @@ export class AddRecipeComponent implements OnInit {
       title: new FormControl('', [
         Validators.required,
         Validators.maxLength(50),
-        // forbiddenNameValidator(/bob/i) // <-- Here's how you pass in the custom validator.
       ]),
       ingredients: this.formBuilder.array([this.createIngredientsForm()]),
       steps: this.formBuilder.array([this.createStepsForm()]),
@@ -55,7 +57,8 @@ export class AddRecipeComponent implements OnInit {
         vegetarian: false,
         vegan: false,
         sweets: false
-      })
+      },
+      { validators: [this.categoriesValidator] })
     });
     console.log(this.recipeForm)
 
@@ -71,6 +74,19 @@ export class AddRecipeComponent implements OnInit {
     // this.recipeForm.controls['item'].valueChanges.subscribe(control => {
     //   console.log(control);
     // })
+  }
+
+  private categoriesValidator(formGroup: FormGroup) {
+    const valid = Object.values(formGroup.value).some(value => {
+      return value;
+    });
+    console.log(valid)
+    if (valid)
+      return null;
+    else {
+      formGroup.setErrors({'incorrect': true});
+      return formGroup;
+    }
   }
 
   changeIngredientsTableRowColor(index: number): void {
@@ -114,6 +130,11 @@ export class AddRecipeComponent implements OnInit {
 
   deleteStepsRow(index: number): void {
     this.stepsControls.splice(index, 1);
+  }
+
+  getCategoriesTooltipCondition() {
+    return (this.submitted && this.categories.invalid)
+      || (this.categories.touched && this.categories.invalid);
   }
 
   getTitleTooltipCondition() {
