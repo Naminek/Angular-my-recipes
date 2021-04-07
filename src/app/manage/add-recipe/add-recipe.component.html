@@ -13,67 +13,9 @@
           [display]="getTitleTooltipCondition()" />
       </div>
     </div>
-    <div class="row recipe-items category" formGroupName="categories">
-      <div class="font-weight-bold item-name col-sm-2 col-form-label">Category</div>
-      <div class="col-sm-10">
-        <div class="btn-group-toggle button-group "
-          data-toggle="buttons"
-          tooltip="At least one category is required."
-          [display]="getCategoriesTooltipCondition()">
-          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.meat.value }">
-            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="meat">Meat
-          </label>
-          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.seafood.value }">
-            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="seafood">Seafood
-          </label>
-          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.vegetarian.value }">
-            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="vegetarian">Vegetarian
-          </label>
-          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.vegan.value }">
-            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="vegan">Vegan
-          </label>
-          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.sweets.value }">
-            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="sweets">Sweets
-          </label>
-        </div>
-      </div>
-    </div>
+
     <div class="row">
-      <div class="recipe-items col-8" formArrayName="ingredients">
-        <p class="font-weight-bold item-name">Ingredients</p>
-        <table class="table table-hover table-sm">
-          <thead>
-            <tr>
-              <th scope="col" style="width: 10%;"></th>
-              <th scope="col" style="width: 35%;">Item</th>
-              <th scope="col" style="width: 35%;">Amount</th>
-              <th scope="col" style="width: 10%;"></th>
-              <th scope="col" style="width: 10%;"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let ingredientsControl of ingredientsControls; let i = index;" [formGroupName]="i" [id]="'ingredients' + i">
-              <td>
-                <div class="arrow">
-                  <div class="up" (click)="onUpIngredients(i)" [ngClass]="{ 'arrow-disabled': i == 0 }"></div>
-                  <div class="down" (click)="onDownIngredients(i)" [ngClass]="{ 'arrow-disabled': i == ingredientsControls.length - 1 }"></div>
-                </div>
-              </td>
-              <td><input class="form-control form-control-sm" formControlName="name" type="text"></td>
-              <td><input class="form-control form-control-sm" formControlName="amount" type="text"></td>
-              <td class="star"><input type="checkbox" id="star" formControlName="mark" /><label for="star"></label></td>
-              <td>
-                <button
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                  (click)="deleteIngredientsRow(i)">×</button>
-              </td>
-            </tr>
-            <tr><td colspan="5"><button type="button" class="btn btn-secondary btn-sm" (click)="onAddIngredientsClick()">+</button></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="recipe-items col-4 upload-image">
+      <div class="recipe-items col-sm-4 col-12 upload-image">
         <div class="mb-2">
           <label for="uploadFiles" class="btn btn-outline-secondary btn-sm d-inline">Select a File</label>
           <button *ngIf="tempImgUrl" type="button" class="btn btn-secondary btn-sm float-right" tooltip="Remove">×</button>
@@ -88,6 +30,43 @@
           <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         </div> -->
       </div>
+      <div class="recipe-items col-sm-8 col-12" formArrayName="ingredients">
+        <p class="font-weight-bold item-name">Ingredients</p>
+        <table class="table table-hover table-sm">
+          <thead>
+            <tr>
+              <th scope="col" style="width: 10%;"></th>
+              <th scope="col" style="width: 30%;">Item</th>
+              <th scope="col" style="width: 30%;">Amount</th>
+              <th scope="col" style="width: 20%;"></th>
+              <th scope="col" style="width: 10%;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let ingredientsControl of ingredientsControls; let i = index;" [formGroupName]="i" [id]="'ingredients' + i">
+              <td>
+                <div class="arrow">
+                  <div class="up" (click)="onUpIngredients(i)" [ngClass]="{ 'arrow-disabled': i == 0 }"></div>
+                  <div class="down" (click)="onDownIngredients(i)" [ngClass]="{ 'arrow-disabled': i == ingredientsControls.length - 1 }"></div>
+                </div>
+              </td>
+              <td><input class="form-control form-control-sm" formControlName="name" type="text"></td>
+              <td><input class="form-control form-control-sm" formControlName="amount" type="text"></td>
+              <!-- <td class="star"><input type="checkbox" id="star" formControlName="mark" /><label for="star"></label></td> -->
+              <td><select formControlName="additional" class="form-control form-control-sm"><option *ngFor="let o of additionalOptions" [ngValue]="o.value">{{ o.symbol }}</option></select></td>
+              <!-- <td><select formControlName="additional"ng-option=""><option *ngFor="let o of additionalOptions" [ngValue]="o.value">{{ o.symbol }}</option></select></td> -->
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-sm"
+                  (click)="deleteIngredientsRow(i)">×</button>
+              </td>
+            </tr>
+            <tr><td colspan="5"><button type="button" class="btn btn-secondary btn-sm" (click)="onAddIngredientsClick()">+</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+
     </div>
     <div class="recipe-items" formArrayName="steps">
       <p class="font-weight-bold item-name">Steps</p>
@@ -121,6 +100,33 @@
         </tbody>
       </table>
     </div>
+
+    <div class="row recipe-items category" formGroupName="categories">
+      <div class="font-weight-bold item-name col-sm-2 col-form-label">Category</div>
+      <div class="col-sm-10">
+        <div class="btn-group-toggle"
+          data-toggle="buttons"
+          tooltip="At least one category is required."
+          [display]="getCategoriesTooltipCondition()">
+          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.meat.value }">
+            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="meat">Meat
+          </label>
+          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.seafood.value }">
+            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="seafood">Seafood
+          </label>
+          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.vegetarian.value }">
+            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="vegetarian">Vegetarian
+          </label>
+          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.vegan.value }">
+            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="vegan">Vegan
+          </label>
+          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.sweets.value }">
+            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="sweets">Sweets
+          </label>
+        </div>
+      </div>
+    </div>
+
     <div class="row recipe-items">
       <label class="font-weight-bold item-name col-sm-2 col-form-label" for="commentTextArea">Comment</label>
       <div class="col-sm-10">

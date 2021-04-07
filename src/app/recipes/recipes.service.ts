@@ -9,9 +9,12 @@ import { FileUpload } from '../data.model';
   providedIn: 'root'
 })
 export class RecipesService {
-  // lastRecipeId: number = 0;
-  // recipes: any;
   recipesObservable: Observable<any[]>;
+  ingredientsAdditionalOptions = [
+    {symbol: '-', value: 0, name: 'none'},
+    {symbol: String.fromCharCode(9733), value: 1, name: 'star'},
+    {symbol: String.fromCharCode(9825), value: 2, name: 'heart'}
+  ];
   private basePath = '/uploads';
 
   constructor(private db: AngularFireDatabase, private storage: AngularFireStorage) {

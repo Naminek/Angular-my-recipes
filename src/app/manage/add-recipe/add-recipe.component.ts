@@ -13,6 +13,7 @@ import { ValidationService } from 'src/app/validation.service';
   styleUrls: ['./add-recipe.component.less']
 })
 export class AddRecipeComponent implements OnInit {
+  additionalOptions: any;
   currentFileUpload!: FileUpload;
   newRecipeId!: number;
   percentage!: number;
@@ -47,6 +48,7 @@ export class AddRecipeComponent implements OnInit {
     private fileUploadService: FileUploadService,
     private validationService: ValidationService,
     private recipesService: RecipesService) {
+      this.additionalOptions = this.recipesService.ingredientsAdditionalOptions;
       this.recipesService.recipesObservable.subscribe((res: Recipe[]) => {
           this.newRecipeId = res[res.length - 1].id + 1;
         }
@@ -116,7 +118,7 @@ export class AddRecipeComponent implements OnInit {
     return this.formBuilder.group({
       name: '',
       amount: '',
-      mark: false
+      additional: 0
     },
     { validators: this.validationService.amountRequired() });
   }

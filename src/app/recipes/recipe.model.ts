@@ -3,7 +3,7 @@ import { Category } from "./categories-filter/category.model";
 export interface Ingredients {
   name: string;
   amount: string;
-  mark: boolean;
+  additional: number;
 }
 
 export interface Recipe {
