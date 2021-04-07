@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { FileUpload } from 'src/app/data.model';
 import { FileUploadService } from 'src/app/file-upload.service';
@@ -161,30 +162,54 @@ export class AddRecipeComponent implements OnInit {
       return;
     console.log(this.recipeForm.value);
     this.submitted = true;
+    // TODO: need to remove unnecessary row from ingrediends and steps.
+    const data = this.recipeForm.value;
+    data.added = new Date(); // TODO: need to check
+    const newRecipeId = this.newRecipeId;
+    data.id = newRecipeId;
+    this.newRecipeId = 0;
 
-    this.recipesService.addRecipe(this.recipeForm.value);
+    this.recipesService.addRecipe(data).then((res: any) => {
+      console.log(res);
+      const recipePath = res.path.pieces_.join('/');
+      if (this.currentFileUpload) {
+        this.fileUploadService.pushImageToStorage(recipePath, this.currentFileUpload, newRecipeId).subscribe(
+          percentage => {
+            console.log(percentage);
+            if (percentage)
+              this.percentage = Math.round(percentage);
+            console.log(data);
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      }
+    })
+
+    // upload image to firebase storage;
+    // if (this.currentFileUpload) {
+    //   this.fileUploadService.pushImageToStorage(this.currentFileUpload, this.newRecipeId).subscribe(
+    //     percentage => {
+    //       console.log(percentage);
+    //       if (percentage)
+    //         this.percentage = Math.round(percentage);
+    //       console.log(data);
+    //       this.recipesService.addRecipe(data);
+    //     },
+    //     error => {
+    //       console.log(error);
+    //     }
+    //   );
+    // } else {
+    //   console.log(data);
+    //   this.recipesService.addRecipe(data);
+    // }
   }
 
   onAddIngredientsClick(): void {
     (this.recipeForm.get('ingredients') as FormArray).push(this.createIngredientsForm());
     console.log(this.ingredientsControls)
-  }
-
-  onAddRecipe(): void {
-    const storageImagePath: string = '/recipeImages/' + this.newRecipeId;
-
-    // Add image to Firebase storage
-    // this.fileUploadService.pushImageToStorage(this.currentFileUpload, newRecipeId.toString()).subscribe(
-      this.fileUploadService.pushImageToStorage(this.currentFileUpload, this.newRecipeId.toString()).subscribe(
-      percentage => {
-        console.log(percentage);
-        if (percentage)
-          this.percentage = Math.round(percentage);
-      },
-      error => {
-        console.log(error);
-      }
-    );
   }
 
   onAddStepsClick(): void {
@@ -222,7 +247,6 @@ export class AddRecipeComponent implements OnInit {
     }
 
     this.currentFileUpload = new FileUpload(file);
-    console.log();
   }
 
   onUpIngredients(index: number): void {

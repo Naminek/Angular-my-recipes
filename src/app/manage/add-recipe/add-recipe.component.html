@@ -23,7 +23,6 @@
         <input type="file" (change)="onFileSelected($event)" id="uploadFiles" accept=".png,.jpg" style="display:none;" />
         <div class="img-area">
           <img *ngIf="tempImgUrl" [src]="tempImgUrl" alt="">
-          <!-- <img src="gs://my-recipes-969d0.appspot.com/recipeImages/fish.jpg" alt=""> -->
           <div *ngIf="!tempImgUrl" class="no-img-message">No image is selected</div>
         </div>
         <!-- <div class="progress mt-1">
@@ -38,7 +37,7 @@
               <th scope="col" style="width: 10%;"></th>
               <th scope="col" style="width: 30%;">Item</th>
               <th scope="col" style="width: 30%;">Amount</th>
-              <th scope="col" style="width: 20%;"></th>
+              <th scope="col" style="width: 20%;">Group</th>
               <th scope="col" style="width: 10%;"></th>
             </tr>
           </thead>
