@@ -45,8 +45,9 @@
           <thead>
             <tr>
               <th scope="col" style="width: 10%;"></th>
-              <th scope="col" style="width: 40%;">Item</th>
-              <th scope="col" style="width: 40%;">Amount</th>
+              <th scope="col" style="width: 35%;">Item</th>
+              <th scope="col" style="width: 35%;">Amount</th>
+              <th scope="col" style="width: 10%;"></th>
               <th scope="col" style="width: 10%;"></th>
             </tr>
           </thead>
@@ -60,6 +61,7 @@
               </td>
               <td><input class="form-control form-control-sm" formControlName="name" type="text"></td>
               <td><input class="form-control form-control-sm" formControlName="amount" type="text"></td>
+              <td class="star"><input type="checkbox" id="star" formControlName="mark" /><label for="star"></label></td>
               <td>
                 <button
                   type="button"
@@ -67,7 +69,7 @@
                   (click)="deleteIngredientsRow(i)">×</button>
               </td>
             </tr>
-            <tr><td colspan="4"><button type="button" class="btn btn-secondary btn-sm" (click)="onAddIngredientsClick()">+</button></td></tr>
+            <tr><td colspan="5"><button type="button" class="btn btn-secondary btn-sm" (click)="onAddIngredientsClick()">+</button></td></tr>
           </tbody>
         </table>
       </div>

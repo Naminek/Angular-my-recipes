@@ -3,6 +3,7 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Valida
 
 import { FileUpload } from 'src/app/data.model';
 import { FileUploadService } from 'src/app/file-upload.service';
+import { Recipe } from 'src/app/recipes/recipe.model';
 import { RecipesService } from 'src/app/recipes/recipes.service';
 import { ValidationService } from 'src/app/validation.service';
 
@@ -13,6 +14,7 @@ import { ValidationService } from 'src/app/validation.service';
 })
 export class AddRecipeComponent implements OnInit {
   currentFileUpload!: FileUpload;
+  newRecipeId!: number;
   percentage!: number;
   recipeForm!: FormGroup;
   selectedFiles!: FileList;
@@ -44,9 +46,15 @@ export class AddRecipeComponent implements OnInit {
     private formBuilder: FormBuilder,
     private fileUploadService: FileUploadService,
     private validationService: ValidationService,
-    private recipesService: RecipesService) { }
+    private recipesService: RecipesService) {
+      this.recipesService.recipesObservable.subscribe((res: Recipe[]) => {
+          this.newRecipeId = res[res.length - 1].id + 1;
+        }
+      )
+    }
 
   ngOnInit(): void {
+
     this.recipeForm = this.formBuilder.group({
       title: new FormControl('', [
         Validators.required,
@@ -107,7 +115,8 @@ export class AddRecipeComponent implements OnInit {
   createIngredientsForm(): FormGroup {
     return this.formBuilder.group({
       name: '',
-      amount: ''
+      amount: '',
+      mark: false
     },
     { validators: this.validationService.amountRequired() });
   }
@@ -160,11 +169,11 @@ export class AddRecipeComponent implements OnInit {
   }
 
   onAddRecipe(): void {
-    const newRecipeId = this.recipesService.lastRecipeId + 1;
-    const storageImagePath = '/recipeImages/' + newRecipeId.toString();
+    const storageImagePath: string = '/recipeImages/' + this.newRecipeId;
 
     // Add image to Firebase storage
-    this.fileUploadService.pushImageToStorage(this.currentFileUpload, newRecipeId.toString()).subscribe(
+    // this.fileUploadService.pushImageToStorage(this.currentFileUpload, newRecipeId.toString()).subscribe(
+      this.fileUploadService.pushImageToStorage(this.currentFileUpload, this.newRecipeId.toString()).subscribe(
       percentage => {
         console.log(percentage);
         if (percentage)
@@ -211,6 +220,7 @@ export class AddRecipeComponent implements OnInit {
     }
 
     this.currentFileUpload = new FileUpload(file);
+    console.log();
   }
 
   onUpIngredients(index: number): void {

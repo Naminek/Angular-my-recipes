@@ -47,12 +47,11 @@ export class RecipesComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log(this.recipesService.recipes);
-    this.recipesService.recipes.subscribe(
+    console.log(this.recipesService.recipesObservable);
+    this.recipesService.recipesObservable.subscribe(
       (res: any) => {
         console.log(res);
-        this.recipesService.lastRecipeId = res[res.length - 1].id;
-        console.log(this.recipesService.lastRecipeId);
+
       }
     )
 
