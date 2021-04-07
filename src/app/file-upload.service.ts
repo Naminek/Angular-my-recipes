@@ -10,12 +10,12 @@ import { FileUpload } from './data.model';
   providedIn: 'root'
 })
 export class FileUploadService {
-  basePath: string = '/recipeImages';
+  recipeImageBasePath: string = '/recipeImages';
 
   constructor(private db: AngularFireDatabase, private storage: AngularFireStorage) { }
 
-  pushFileToStorage(fileUpload: FileUpload): Observable<number | undefined> {
-    const filePath = `${this.basePath}/${fileUpload.file.name}`;
+  pushImageToStorage(fileUpload: FileUpload, fileName: string): Observable<number | undefined> {
+    const filePath = `${this.recipeImageBasePath}/${fileName}`;
     const storageRef = this.storage.ref(filePath);
     const uploadTask = this.storage.upload(filePath, fileUpload.file);
 
@@ -23,7 +23,7 @@ export class FileUploadService {
       finalize(() => {
         storageRef.getDownloadURL().subscribe(downloadURL => {
           fileUpload.url = downloadURL;
-          fileUpload.name = fileUpload.file.name;
+          fileUpload.name = fileName;
           this.saveFileData(fileUpload);
         });
       })
@@ -33,11 +33,11 @@ export class FileUploadService {
   }
 
   private saveFileData(fileUpload: FileUpload): void {
-    this.db.list(this.basePath).push(fileUpload);
+    this.db.list(this.recipeImageBasePath).push(fileUpload);
   }
 
   // getFiles(numberItems): AngularFireList<FileUpload> {
-  //   return this.db.list(this.basePath, ref =>
+  //   return this.db.list(this.recipeImageBasePath, ref =>
   //     ref.limitToLast(numberItems));
   // }
 
@@ -50,11 +50,11 @@ export class FileUploadService {
   }
 
   private deleteFileDatabase(key: string): Promise<void> {
-    return this.db.list(this.basePath).remove(key);
+    return this.db.list(this.recipeImageBasePath).remove(key);
   }
 
   private deleteFileStorage(name: string): void {
-    const storageRef = this.storage.ref(this.basePath);
+    const storageRef = this.storage.ref(this.recipeImageBasePath);
     storageRef.child(name).delete();
   }
 }

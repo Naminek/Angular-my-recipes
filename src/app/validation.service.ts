@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
+import { Ingredients } from './recipes/recipe.model';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,27 @@ import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
 export class ValidationService {
 
   constructor() { }
+
+  amountRequired() {
+    return (control: AbstractControl): {[key: string]: any} | null => {
+      console.log(control);
+      if (control.value.name != '' && control.value.amount == '')
+        return {'emptyAmount': true};
+      return null;
+    }
+  }
+
+  emptyIngredientsNotAllowed() {
+    return (array: AbstractControl): {[key: string]: any} | null => {
+      console.log(array);
+      const validGroup = array.value.find((i: Ingredients) => {
+        return i.name != '' && i.amount !='';
+      })
+      if (validGroup)
+        return null;
+      return {'invalidIngredients': true }
+    }
+  }
 
   minSelectionObject(min: number) {
     return (group: FormGroup): {[key: string]: any} | null => {
@@ -20,8 +42,9 @@ export class ValidationService {
   }
 
   minLengthArray(min: number) {
-    return (c: AbstractControl): {[key: string]: any} | null => {
-        if (c.value.length >= min)
+    return (control: AbstractControl): {[key: string]: any} | null => {
+      console.log(control)
+        if (control.value.length >= min)
             return null;
         return {'minLengthArray': { valid: false }};
     }

@@ -51,6 +51,8 @@ export class RecipesComponent implements OnInit {
     this.recipesService.recipes.subscribe(
       (res: any) => {
         console.log(res);
+        this.recipesService.lastRecipeId = res[res.length - 1].id;
+        console.log(this.recipesService.lastRecipeId);
       }
     )
 

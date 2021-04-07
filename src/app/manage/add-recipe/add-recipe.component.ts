@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { FileUpload } from 'src/app/data.model';
 import { FileUploadService } from 'src/app/file-upload.service';
+import { RecipesService } from 'src/app/recipes/recipes.service';
 import { ValidationService } from 'src/app/validation.service';
 
 @Component({
@@ -11,12 +13,12 @@ import { ValidationService } from 'src/app/validation.service';
 })
 export class AddRecipeComponent implements OnInit {
   currentFileUpload!: FileUpload;
-  imgTempUrl: string | ArrayBuffer | null = '';
   percentage!: number;
+  recipeForm!: FormGroup;
   selectedFiles!: FileList;
   steps!: FormArray;
   submitted: boolean = false;
-  recipeForm!: FormGroup;
+  tempImgUrl: string | ArrayBuffer | null = '';
 
   get categories() {
     return this.recipeForm.get('categories') as FormGroup;
@@ -41,7 +43,8 @@ export class AddRecipeComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private fileUploadService: FileUploadService,
-    private validationService: ValidationService) { }
+    private validationService: ValidationService,
+    private recipesService: RecipesService) { }
 
   ngOnInit(): void {
     this.recipeForm = this.formBuilder.group({
@@ -51,7 +54,8 @@ export class AddRecipeComponent implements OnInit {
       ]),
       ingredients: this.formBuilder.array(
         [this.createIngredientsForm()],
-        this.validationService.minLengthArray(1)),
+        this.validationService.emptyIngredientsNotAllowed()
+      ),
       steps: this.formBuilder.array([this.createStepsForm()]),
       comments: '',
       categories: this.formBuilder.group({
@@ -104,12 +108,12 @@ export class AddRecipeComponent implements OnInit {
     return this.formBuilder.group({
       name: '',
       amount: ''
-    });
+    },
+    { validators: this.validationService.amountRequired() });
   }
 
   createStepsForm(): FormGroup {
     return this.formBuilder.group({
-      step: null,
       description: ''
     });
   }
@@ -142,16 +146,25 @@ export class AddRecipeComponent implements OnInit {
   }
 
   onAddClick(): void {
-    console.log(this.recipeForm);
+    if (!this.recipeForm.valid)
+      return;
+    console.log(this.recipeForm.value);
     this.submitted = true;
+
+    this.recipesService.addRecipe(this.recipeForm.value);
   }
 
   onAddIngredientsClick(): void {
-    this.ingredientsControls.push(this.createIngredientsForm());
+    (this.recipeForm.get('ingredients') as FormArray).push(this.createIngredientsForm());
+    console.log(this.ingredientsControls)
   }
 
   onAddRecipe(): void {
-    this.fileUploadService.pushFileToStorage(this.currentFileUpload).subscribe(
+    const newRecipeId = this.recipesService.lastRecipeId + 1;
+    const storageImagePath = '/recipeImages/' + newRecipeId.toString();
+
+    // Add image to Firebase storage
+    this.fileUploadService.pushImageToStorage(this.currentFileUpload, newRecipeId.toString()).subscribe(
       percentage => {
         console.log(percentage);
         if (percentage)
@@ -164,7 +177,7 @@ export class AddRecipeComponent implements OnInit {
   }
 
   onAddStepsClick(): void {
-    this.stepsControls.push(this.createStepsForm());
+    (this.recipeForm.get('steps') as FormArray).push(this.createStepsForm());
   }
 
   onDownIngredients(index: number): void {
@@ -194,7 +207,7 @@ export class AddRecipeComponent implements OnInit {
     const reader = new FileReader();
     reader.readAsDataURL(this.selectedFiles[0]);
     reader.onload = (_event) => {
-        this.imgTempUrl = reader.result;
+        this.tempImgUrl = reader.result;
     }
 
     this.currentFileUpload = new FileUpload(file);
@@ -217,15 +230,5 @@ export class AddRecipeComponent implements OnInit {
     this.stepsControls.splice(index - 1, 0, item);
     this.changeStepsTableRowColor(index);
   }
-
-  // onBlurIngredientsInput(ingredientsControl: AbstractControl, arrayIndex: number) {
-  //   console.log(ingredientsControl);
-  //   console.log(arrayIndex);
-  //   if (ingredientsControl.status == 'VALID'
-  //     && ingredientsControl.value.name != ''
-  //     && ingredientsControl.value.amount != '') {
-  //       this.ingredientsControls.push(this.createIngredientsForm());
-  //     }
-  // }
 
 }
