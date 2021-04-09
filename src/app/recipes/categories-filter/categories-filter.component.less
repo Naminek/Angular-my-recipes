@@ -5,17 +5,33 @@
   margin: 0 auto;
   display: grid;
   grid-gap: 20px;
-  text-align: center;
+  justify-items: center;
+  align-items: center;
 
   .one-category {
-    position: relative;
+    width: calc(@image-width + 50px);
     text-align: center;
+    padding: 25px 15px;
 
-    img {
-      width: @image-width;
-      margin: 25px 15px; // TODO: adjust clickable area
-      border-radius: 20%;
+    .category-button {
+      position: relative;
+      text-align: center;
       cursor: pointer;
+    }
+    img, .category-button {
+      width: @image-width;
+      border-radius: 20%;
+    }
+    .category-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .category-button:active {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2)
+    }
+    .category-button:focus {
+      outline: none;
     }
 
     .category-text {
@@ -24,9 +40,8 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: @image-width;
+      width: 100%;
       background-color: rgba(255, 255, 255, 0.8);
-      cursor: pointer;
     }
   }
 

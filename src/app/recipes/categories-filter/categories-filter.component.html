@@ -1,6 +1,6 @@
 <div class="categories-filter">
   <div class="one-category" *ngFor="let category of categories">
-    <div [routerLink]="['/recipes/recipe-list', category.id]">
+    <div class="category-button" [routerLink]="['/recipes/recipe-list', category.id]">
       <img [src]="category.image" [alt]="category.name">
       <div class="category-text">{{ category.name }}</div>
     </div>
