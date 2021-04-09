@@ -8,6 +8,7 @@ import { Category } from './category.model';
 })
 export class CategoriesFilterComponent implements OnInit {
   categories: Category[] = [
+    { id: 0, name: 'All', image: '../../../assets/all2.jpg' },
     { id: 1, name: 'Meat', image: '../../../assets/meat.jpg'},
     { id: 2, name: 'Seafood', image: '../../../assets/fish.jpg'},
     { id: 3, name: 'Vegetarian', image: '../../../assets/vegetarian.jpg'},

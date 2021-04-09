@@ -15,11 +15,11 @@ import { ValidationService } from 'src/app/validation.service';
 })
 export class AddRecipeComponent implements OnInit {
   additionalOptions: any;
-  currentFileUpload!: FileUpload;
+  currentFileUpload: FileUpload | undefined;
   newRecipeId!: number;
   percentage!: number;
   recipeForm!: FormGroup;
-  selectedFiles!: FileList;
+  selectedFiles: FileList | undefined;
   steps!: FormArray;
   submitted: boolean = false;
   tempImgUrl: string | ArrayBuffer | null = '';
@@ -164,14 +164,19 @@ export class AddRecipeComponent implements OnInit {
     this.submitted = true;
     // TODO: need to remove unnecessary row from ingrediends and steps.
     const data = this.recipeForm.value;
-    data.added = new Date(); // TODO: need to check
+    data.added = new Date().getTime(); // TODO: need to check
     const newRecipeId = this.newRecipeId;
+    if (newRecipeId == 0) {
+      alert('Wrong new Id!');
+      return;
+    }
     data.id = newRecipeId;
     this.newRecipeId = 0;
 
     this.recipesService.addRecipe(data).then((res: any) => {
       console.log(res);
       const recipePath = res.path.pieces_.join('/');
+      this.recipeForm.reset();
       if (this.currentFileUpload) {
         this.fileUploadService.pushImageToStorage(recipePath, this.currentFileUpload, newRecipeId).subscribe(
           percentage => {
@@ -236,7 +241,7 @@ export class AddRecipeComponent implements OnInit {
 
   onFileSelected(event: any): void {
     this.selectedFiles = event.target.files;
-    if (this.selectedFiles.length !== 1)
+    if (!this.selectedFiles || this.selectedFiles.length !== 1)
       return;
     const file = this.selectedFiles[0];
 
@@ -247,6 +252,13 @@ export class AddRecipeComponent implements OnInit {
     }
 
     this.currentFileUpload = new FileUpload(file);
+  }
+
+  onRemoveImg() {
+    this.selectedFiles = undefined;
+    console.log(this.selectedFiles);
+    this.tempImgUrl = '';
+    this.currentFileUpload = undefined;
   }
 
   onUpIngredients(index: number): void {
