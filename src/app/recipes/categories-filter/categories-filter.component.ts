@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+
 import { Category } from './category.model';
+import { RecipesService } from '../recipes.service';
+import { Recipe } from '../recipe.model';
 
 @Component({
   selector: 'categories-filter',
@@ -14,9 +17,17 @@ export class CategoriesFilterComponent implements OnInit {
     { id: 3, name: 'Vegetarian', image: '../../../assets/vegetarian.jpg'},
     { id: 4, name: 'Vegan', image: '../../../assets/vegan.jpg'},
     { id: 5, name: 'Sweets', image: '../../../assets/sweets.jpg'},
-  ]
+  ];
+  // recipes: Recipe[] = [];
 
-  constructor() { }
+  constructor(recipesService: RecipesService) {
+    // recipesService.recipesObservable.subscribe(
+    //   (res: any) => {
+    //     console.log(res);
+    //     this.recipes = res;
+    //   }
+    // )
+  }
 
   ngOnInit(): void {
     const date = new Date();

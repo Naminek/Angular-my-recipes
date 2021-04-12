@@ -48,12 +48,6 @@ export class RecipesComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.recipesService.recipesObservable);
-    this.recipesService.recipesObservable.subscribe(
-      (res: any) => {
-        console.log(res);
-
-      }
-    )
 
   }
 
