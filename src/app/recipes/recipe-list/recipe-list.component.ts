@@ -14,6 +14,13 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   private routeSub: Subscription;
   private allRecipes: Recipe[] = [];
   recipes: Recipe[] = [];
+  private categories = [
+    {id: 1, value: 'meat'},
+    {id: 2, value: 'seafood'},
+    {id: 3, value: 'vegetaarian'},
+    {id: 4, value: 'vegan'},
+    {id: 5, value: 'sweets'}
+  ]
 
   constructor(route: ActivatedRoute,
               private recipesService: RecipesService) {
@@ -26,7 +33,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.recipesService.recipesObservable.subscribe((res: Recipe[]) => {
         this.allRecipes = res;
-        console.log(this.allRecipes);
+        console.log(this.id);
         this.recipes = this.id ? this.getRecipes(this.id) : this.allRecipes;
         console.log(this.recipes);
       }
@@ -38,9 +45,16 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   getRecipes(id: number): Recipe[] {
-    return this.allRecipes.filter((recipe: Recipe) => {
-      return recipe.id == id;
-    });
+    const recipes: Recipe[] = [];
+      this.allRecipes.filter((recipe: Recipe) => {
+        console.log(recipe);
+        const selectedCategory = recipe.category.find(c => {
+          return c.id == id;
+        });
+        if (selectedCategory?.value)
+          recipes.push(recipe);
+      });
+    return recipes;
   }
 
 

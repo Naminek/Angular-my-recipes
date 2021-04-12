@@ -7,6 +7,7 @@
   }
   .recipe-items, .submit-button div button {
     margin-top: 30px;
+    vertical-align: middle;
   }
 
   p.item-name {
@@ -118,31 +119,16 @@
       background-color: rgb(212, 247, 171);
     }
 
-    // .star {
-    //   position: relative;
-    // }
+  }
 
-    // .star input {
-    //   visibility:hidden;
-    //   font-size:30px;
-    //   cursor:pointer;
-    // }
-    // .star input:before {
-    //   content: "\2606";
-    //   color: #6c757d;
-    //   position: absolute;
-    //   top: -2px;
-    //   left: 10px;
-    //   visibility:visible;
-    // }
-    // .star input:checked:before {
-    //   content: "\2605";
-    //   color: #6c757d;
-    //   position: absolute;
-    //   top: -2px;
-    //   left: 10px;
-    // }
-
+  .estimated-time {
+    div {
+      display: flex;
+      align-items: center;
+      input {
+        width: 100px;
+      }
+    }
   }
 
   input.ng-touched.ng-invalid,
@@ -150,8 +136,8 @@
     box-shadow: 0 0 0.2rem 0.2rem rgba(235, 76, 76, 0.7)
   }
 
-  .category.ng-touched.ng-invalid .button-group label,
-  .submitted .category.ng-invalid .button-group label {
+  .category .btn-group-toggle label.invalid.touched,
+  .submitted .category .btn-group-toggle label.invalid {
     box-shadow: 0 0 0.2rem 0.2rem rgba(235, 76, 76, 0.7)
   }
 

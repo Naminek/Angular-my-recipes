@@ -14,6 +14,13 @@
       </div>
     </div>
 
+    <div class="row recipe-items description">
+      <label class="font-weight-bold item-name col-sm-2 col-form-label" for="descriptionTextArea">Description</label>
+      <div class="col-sm-10">
+        <textarea class="form-control" formControlName="description" id="descriptionTextArea"></textarea>
+      </div>
+    </div>
+
     <div class="row">
       <div class="recipe-items col-sm-4 col-12 upload-image">
         <div class="mb-2">
@@ -100,29 +107,27 @@
       </table>
     </div>
 
-    <div class="row recipe-items category" formGroupName="categories">
+    <div class="row recipe-items category" formGroupName="category">
       <div class="font-weight-bold item-name col-sm-2 col-form-label">Category</div>
       <div class="col-sm-10">
         <div class="btn-group-toggle"
           data-toggle="buttons"
           tooltip="At least one category is required."
-          [display]="getCategoriesTooltipCondition()">
-          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.meat.value }">
-            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="meat">Meat
-          </label>
-          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.seafood.value }">
-            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="seafood">Seafood
-          </label>
-          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.vegetarian.value }">
-            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="vegetarian">Vegetarian
-          </label>
-          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.vegan.value }">
-            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="vegan">Vegan
-          </label>
-          <label class="btn btn-outline-secondary" [ngClass]="{'active': categoriesControls.sweets.value }">
-            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="sweets">Sweets
+          [display]="getCategoryTooltipCondition()">
+          <label
+            *ngFor="let categoryControl of categoryControls; let i = index;"
+            [formGroupName]="i" class="btn btn-outline-secondary"
+            [ngClass]="{'active': categoryControl.value.value, 'invalid': category.invalid, 'touched': category.touched}">
+            <input type="checkbox" class="btn-check" autocomplete="off" formControlName="value">{{categoryControl.value.name}}
           </label>
         </div>
+      </div>
+    </div>
+
+    <div class="row recipe-items estimated-time">
+      <label for="estimatedTimeInput" class="font-weight-bold item-name col-sm-2 col-form-label">Estimated Time</label>
+      <div class="col-sm-10">
+        <input class="form-control" formControlName="timeEstimation" type="number" id="estimatedTimeInput">
       </div>
     </div>
 
@@ -132,6 +137,7 @@
         <textarea class="form-control" formControlName="comments" id="commentTextArea"></textarea>
       </div>
     </div>
+
     <div class="row submit-button">
       <div class="col-sm-12">
         <button class="btn btn-secondary float-right" type="submit" [disabled]="!recipeForm.valid">Add</button>

@@ -1,5 +1,5 @@
 <div class="categories-filter">
-  <div class="one-category" *ngFor="let category of categories">
+  <div class="one-category" *ngFor="let category of categoryList">
     <div class="category-button" [routerLink]="['/recipes/recipe-list', category.id]">
       <img [src]="category.image" [alt]="category.name">
       <div class="category-text">{{ category.name }}</div>

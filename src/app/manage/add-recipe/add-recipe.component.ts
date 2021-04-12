@@ -24,12 +24,12 @@ export class AddRecipeComponent implements OnInit {
   submitted: boolean = false;
   tempImgUrl: string | ArrayBuffer | null = '';
 
-  get categories() {
-    return this.recipeForm.get('categories') as FormGroup;
+  get category() {
+    return this.recipeForm.get('category') as FormArray;
   }
 
-  get categoriesControls(): {[key: string]: AbstractControl} {
-    return (this.recipeForm.get('categories') as FormGroup).controls;
+  get categoryControls(): AbstractControl[] {
+    return (this.recipeForm.get('category') as FormArray).controls;
   }
 
   get ingredientsControls(): AbstractControl[] {
@@ -58,26 +58,7 @@ export class AddRecipeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.recipeForm = this.formBuilder.group({
-      title: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(50),
-      ]),
-      ingredients: this.formBuilder.array(
-        [this.createIngredientsForm()],
-        this.validationService.emptyIngredientsNotAllowed()
-      ),
-      steps: this.formBuilder.array([this.createStepsForm()]),
-      comments: '',
-      categories: this.formBuilder.group({
-        meat: false,
-        seafood: false,
-        vegetarian: false,
-        vegan: false,
-        sweets: false
-      },
-      { validators: [this.validationService.minSelectionObject(1)] })
-    });
+    this.recipeForm = this.buildRecipeForm();
     console.log(this.recipeForm)
 
     this.ingredientsControls.forEach(control => {
@@ -92,6 +73,32 @@ export class AddRecipeComponent implements OnInit {
     // this.recipeForm.controls['item'].valueChanges.subscribe(control => {
     //   console.log(control);
     // })
+  }
+
+  buildRecipeForm() {
+    return this.formBuilder.group({
+      title: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(50),
+      ]),
+      description: '',
+      ingredients: this.formBuilder.array(
+        [this.createIngredientsForm()],
+        this.validationService.emptyIngredientsNotAllowed()
+      ),
+      steps: this.formBuilder.array([this.createStepsForm()]),
+      category: this.formBuilder.array([
+        this.createCategoryForm(1, 'Meat'),
+        this.createCategoryForm(2, 'Seafood'),
+        this.createCategoryForm(3, 'Vegetarian'),
+        this.createCategoryForm(4, 'Vegan'),
+        this.createCategoryForm(5, 'Sweets'),
+      ], this.validationService.minSelectionCategory(1)),
+      timeEstimation: new FormControl(null, [
+        Validators.required
+      ]),
+      comments: ''
+    });
   }
 
 
@@ -113,6 +120,14 @@ export class AddRecipeComponent implements OnInit {
         row.classList.remove('highlight');
       }, 600)
     }
+  }
+
+  createCategoryForm(id: number, name: string): FormGroup {
+    return this.formBuilder.group({
+      id: id,
+      name: name,
+      value: false
+    })
   }
 
   createIngredientsForm(): FormGroup {
@@ -147,9 +162,9 @@ export class AddRecipeComponent implements OnInit {
     this.stepsControls.splice(index, 1);
   }
 
-  getCategoriesTooltipCondition() {
-    return (this.submitted && this.categories.invalid)
-      || (this.categories.touched && this.categories.invalid);
+  getCategoryTooltipCondition() {
+    return (this.submitted && this.category.invalid)
+      || (this.category.touched && this.category.invalid);
   }
 
   getTitleTooltipCondition() {
@@ -177,6 +192,8 @@ export class AddRecipeComponent implements OnInit {
       console.log(res);
       const recipePath = res.path.pieces_.join('/');
       this.recipeForm.reset();
+      this.recipeForm = this.buildRecipeForm();
+      this.submitted = false;
       if (this.currentFileUpload) {
         this.fileUploadService.pushImageToStorage(recipePath, this.currentFileUpload, newRecipeId).subscribe(
           percentage => {
@@ -192,24 +209,6 @@ export class AddRecipeComponent implements OnInit {
       }
     })
 
-    // upload image to firebase storage;
-    // if (this.currentFileUpload) {
-    //   this.fileUploadService.pushImageToStorage(this.currentFileUpload, this.newRecipeId).subscribe(
-    //     percentage => {
-    //       console.log(percentage);
-    //       if (percentage)
-    //         this.percentage = Math.round(percentage);
-    //       console.log(data);
-    //       this.recipesService.addRecipe(data);
-    //     },
-    //     error => {
-    //       console.log(error);
-    //     }
-    //   );
-    // } else {
-    //   console.log(data);
-    //   this.recipesService.addRecipe(data);
-    // }
   }
 
   onAddIngredientsClick(): void {

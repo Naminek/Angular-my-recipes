@@ -11,7 +11,6 @@ export class ValidationService {
 
   amountRequired() {
     return (control: AbstractControl): {[key: string]: any} | null => {
-      console.log(control);
       if (control.value.name != '' && control.value.amount == '')
         return {'emptyAmount': true};
       return null;
@@ -20,13 +19,24 @@ export class ValidationService {
 
   emptyIngredientsNotAllowed() {
     return (array: AbstractControl): {[key: string]: any} | null => {
-      console.log(array);
       const validGroup = array.value.find((i: Ingredients) => {
         return i.name != '' && i.amount !='';
       })
       if (validGroup)
         return null;
       return {'invalidIngredients': true }
+    }
+  }
+
+  minSelectionCategory(min: number) {
+    return (control: AbstractControl): {[key: string]: any} | null => {
+      console.log(control)
+      const selected = control.value.filter((category: any) => {
+        return category.value;
+      });
+      if (selected.length >= min)
+        return null;
+      return {'minimumSelected': false }
     }
   }
 
@@ -43,7 +53,6 @@ export class ValidationService {
 
   minLengthArray(min: number) {
     return (control: AbstractControl): {[key: string]: any} | null => {
-      console.log(control)
         if (control.value.length >= min)
             return null;
         return {'minLengthArray': { valid: false }};
