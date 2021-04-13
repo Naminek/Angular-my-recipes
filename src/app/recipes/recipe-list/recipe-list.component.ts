@@ -14,13 +14,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   private routeSub: Subscription;
   private allRecipes: Recipe[] = [];
   recipes: Recipe[] = [];
-  private categories = [
-    {id: 1, value: 'meat'},
-    {id: 2, value: 'seafood'},
-    {id: 3, value: 'vegetaarian'},
-    {id: 4, value: 'vegan'},
-    {id: 5, value: 'sweets'}
-  ]
+  searchText: string = '';
 
   constructor(route: ActivatedRoute,
               private recipesService: RecipesService) {

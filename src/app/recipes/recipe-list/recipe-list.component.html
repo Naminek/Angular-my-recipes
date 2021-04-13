@@ -1,17 +1,24 @@
 <div class="recipes-list">
-  <div class="input-group search-engine">
-    <input type="text" class="form-control" placeholder="Search for Title" />
-    <div class="input-group-btn">
-        <div class="btn-group" role="group">
-          <button type="button" class="btn btn-outline-success">Search</button>
-        </div>
-    </div>
+  <div class="search-engine">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search from Title"
+      id="search-text"
+      aria-describedby="search-text"
+      [(ngModel)]="searchText"/>
   </div>
-  <div *ngFor="let recipe of recipes">
-    <div class="one-recipe">
-      <p>{{recipe.title}}</p>
-      <p>{{recipe.description}}</p>
-      <p>{{recipe.timeEstimation}}</p>
+  <div *ngFor="let recipe of recipes | recipeTitleFilter: searchText">
+    <div class="one-recipe row">
+      <div class="left col-sm-8 col-12">
+        <p>{{recipe.title}}</p>
+        <p>{{recipe.description}}</p>
+        <p>{{recipe.timeEstimation}}</p>
+      </div>
+      <div class="img-area right col-sm-4 col-12">
+        <img *ngIf="recipe.url" [src]="recipe.url" alt="recipe-image">
+        <div *ngIf="!recipe.url" class="no-img-message">No image</div>
+      </div>
     </div>
   </div>
 </div>

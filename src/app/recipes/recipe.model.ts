@@ -11,7 +11,7 @@ export interface Recipe {
   added: number;
   category: Category[],
   comments: string;
-  imagePath: string;
+  url: string;
   modified: number;
   steps: string[];
   title: string;
