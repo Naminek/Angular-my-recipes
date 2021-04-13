@@ -17,4 +17,5 @@ export interface Recipe {
   title: string;
   id: number;
   timeEstimation: number;
+  description: string;
 }
