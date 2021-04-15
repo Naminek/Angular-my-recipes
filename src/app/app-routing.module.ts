@@ -14,7 +14,7 @@ const routes: Routes = [
     { path: '', redirectTo: 'categories-filter', pathMatch: 'full' },
     { path: 'categories-filter', component: CategoriesFilterComponent },
     { path: 'ingredients-filter', component: IngredientsFilterComponent },
-    { path: 'recipe-list/:id', component: RecipeListComponent },
+    { path: 'recipe-list/:name', component: RecipeListComponent },
   ]},
   { path: 'ingredients', component: IngredientsComponent },
   { path: 'add-recipe', component: AddRecipeComponent }

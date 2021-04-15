@@ -2,12 +2,21 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
+import { FilterCategory } from './categories-filter/category.model';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecipesService {
+  categoryFilterList: FilterCategory[] = [
+    {id: 0, name: 'All'},
+    {id: 1, name: 'Meat'},
+    {id: 2, name: 'Seafood'},
+    {id: 3, name: 'Vegetarian'},
+    {id: 4, name: 'Vegan'},
+    {id: 5, name: 'Sweets'}
+  ]
   ingredientsAdditionalOptions = [
     {symbol: String.fromCharCode(8212), value: 0, name: 'none'},
     {symbol: String.fromCharCode(9824), value: 1, name: 'spade'},

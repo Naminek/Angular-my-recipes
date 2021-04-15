@@ -25,7 +25,9 @@ export class RecipesComponent implements OnInit {
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-          if (event.urlAfterRedirects == '/recipes/categories-filter') {
+        console.log(event.urlAfterRedirects);
+          if (event.urlAfterRedirects == '/recipes/categories-filter'
+              || event.urlAfterRedirects.includes('/recipes/recipe-list/')) {
             this.filterByValue = false;
             this.filterBy = 'categories-filter';
           } else if (event.urlAfterRedirects == '/recipes/ingredients-filter') {

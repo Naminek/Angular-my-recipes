@@ -3,3 +3,8 @@ export interface Category {
   name: string;
   value: boolean;
 }
+
+export interface FilterCategory {
+  id: number;
+  name: string;
+}

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { FilterCategory } from '../categories-filter/category.model';
 import { Recipe } from '../recipe.model';
 import { RecipesService } from '../recipes.service';
 
@@ -10,25 +11,30 @@ import { RecipesService } from '../recipes.service';
   styleUrls: ['./recipe-list.component.less']
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
-  private id!: number;
-  private routeSub: Subscription;
   private allRecipes: Recipe[] = [];
+  private category!: string;
+  private categoryId!: number| undefined;
+  private routeSub: Subscription;
   recipes: Recipe[] = [];
   searchText: string = '';
 
   constructor(route: ActivatedRoute,
               private recipesService: RecipesService) {
     this.routeSub = route.params.subscribe(params => {
-      console.log(params);
-      this.id = +params['id']; // (+) converts string 'id' to a number
+      this.category = params['name'];
+      this.categoryId = this.recipesService.categoryFilterList.find((category: FilterCategory) => {
+        return category.name == this.category;
+      })?.id;
+      // console.log(params);
+      // this.categoryId = +params['categoryId']; // (+) converts string 'categoryId' to a number
    });
   }
 
   ngOnInit(): void {
     this.recipesService.recipesObservable.subscribe((res: Recipe[]) => {
         this.allRecipes = res;
-        console.log(this.id);
-        this.recipes = this.id ? this.getRecipes(this.id) : this.allRecipes;
+        console.log(this.categoryId);
+        this.recipes = this.category ? this.getRecipes(this.category) : this.allRecipes;
         console.log(this.recipes);
       }
     )
@@ -38,12 +44,12 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.routeSub.unsubscribe();
   }
 
-  getRecipes(id: number): Recipe[] {
+  getRecipes(category: string): Recipe[] {
     const recipes: Recipe[] = [];
       this.allRecipes.filter((recipe: Recipe) => {
         console.log(recipe);
         const selectedCategory = recipe.category.find(c => {
-          return c.id == id;
+          return c.name == category;
         });
         if (selectedCategory?.value)
           recipes.push(recipe);
