@@ -13,7 +13,7 @@
       <div class="left col-sm-8 col-12">
         <p>{{recipe.title}}</p>
         <p>{{recipe.description}}</p>
-        <p>{{recipe.timeEstimation}}</p>
+        <p class="time"><i class="clock"></i><span>{{recipe.timeEstimation}}</span>minutes</p>
       </div>
       <div class="img-area right col-sm-4 col-12">
         <img *ngIf="recipe.url" [src]="recipe.url" alt="recipe-image">
