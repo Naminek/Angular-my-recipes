@@ -1,4 +1,8 @@
 .recipes-list {
+  .category-selection {
+    width: 350px;
+    margin-left: auto;
+  }
   .search-engine {
     margin: 30px 0;
     input {
@@ -9,15 +13,17 @@
   .one-recipe {
     cursor: pointer;
     margin: 10px 0;
-    border: solid #ced4da 2px;
+    border: solid #ced4da 3px;
     border-radius: 5px;
     padding: 10px;
     justify-content: center;
 
     .left {
       padding: 20px;
-
+      position: relative;
       .time {
+        position: absolute;
+        bottom: 0;
         .clock {
           width:18px;
           height: 18px;

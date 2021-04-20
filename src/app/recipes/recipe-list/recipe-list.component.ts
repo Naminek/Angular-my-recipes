@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FilterCategory } from '../categories-filter/category.model';
 import { Recipe } from '../recipe.model';
@@ -12,16 +12,20 @@ import { RecipesService } from '../recipes.service';
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
   private allRecipes: Recipe[] = [];
-  private category!: string;
-  private categoryId!: number| undefined;
+  private category!: string | undefined;
+  categoryId!: number | undefined;
   private routeSub: Subscription;
   recipes: Recipe[] = [];
+  categorySelection: any[] = [];
   searchText: string = '';
 
   constructor(route: ActivatedRoute,
-              private recipesService: RecipesService) {
+              private recipesService: RecipesService,
+              private router: Router) {
+    this.categorySelection = recipesService.categoryFilterList;
     this.routeSub = route.params.subscribe(params => {
       this.category = params['name'];
+      console.log(this.category);
       this.categoryId = this.recipesService.categoryFilterList.find((category: FilterCategory) => {
         return category.name == this.category;
       })?.id;
@@ -34,7 +38,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.recipesService.recipesObservable.subscribe((res: Recipe[]) => {
         this.allRecipes = res;
         console.log(this.categoryId);
-        this.recipes = this.category ? this.getRecipes(this.category) : this.allRecipes;
+        this.recipes = this.categoryId ? this.getRecipes(this.category) : this.allRecipes;
         console.log(this.recipes);
       }
     )
@@ -44,7 +48,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.routeSub.unsubscribe();
   }
 
-  getRecipes(category: string): Recipe[] {
+  getRecipes(category: string | undefined): Recipe[] {
     const recipes: Recipe[] = [];
       this.allRecipes.filter((recipe: Recipe) => {
         console.log(recipe);
@@ -55,6 +59,16 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           recipes.push(recipe);
       });
     return recipes;
+  }
+
+  onCategoryChange() {
+    this.category = this.recipesService.categoryFilterList.find((category: FilterCategory) => {
+      return category.id == this.categoryId;
+    })?.name;
+    this.router.navigate(['/recipes/recipe-list/' + this.category]).then((res: Boolean) => {
+      if (res)
+      this.recipes = this.categoryId ? this.getRecipes(this.category) : this.allRecipes;
+    });
   }
 
 

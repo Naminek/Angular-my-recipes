@@ -1,4 +1,7 @@
 <div class="recipes-list">
+  <select [(ngModel)]="categoryId" class="form-control category-selection" (change)="onCategoryChange()">
+    <option *ngFor="let c of categorySelection" [ngValue]="c.id">{{ c.name }}</option>
+  </select>
   <div class="search-engine">
     <input
       type="text"
@@ -11,8 +14,8 @@
   <div *ngFor="let recipe of recipes | recipeTitleFilter: searchText">
     <div class="one-recipe row">
       <div class="left col-sm-8 col-12">
-        <p>{{recipe.title}}</p>
-        <p>{{recipe.description}}</p>
+        <p class="title">{{recipe.title}}</p>
+        <p class="description">{{recipe.description}}</p>
         <p class="time"><i class="clock"></i><span>{{recipe.timeEstimation}}</span>minutes</p>
       </div>
       <div class="img-area right col-sm-4 col-12">
