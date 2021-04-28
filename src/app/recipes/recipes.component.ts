@@ -12,6 +12,7 @@ export class RecipesComponent implements OnInit {
   filterOptions: string[] = ['categories', 'ingredients']; // categories: false, ingredients: true in switch button
   filterByValue: boolean = false;
   filterBy: string = '';
+  isHeaderVisible: boolean = true;
 
   constructor(
     public router: Router,
@@ -22,6 +23,9 @@ export class RecipesComponent implements OnInit {
   {
     this.filterByValue = routingService.recipesRouterLink == 'ingredients-filter';
     this.filterBy = routingService.recipesRouterLink;
+    this.recipesService.filterHeaderVisiblityChanged.subscribe((value: boolean) => {
+      this.isHeaderVisible = value;
+    })
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {

@@ -1,5 +1,5 @@
 <div class="recipes-home">
-  <div class="title">
+  <div class="title" *ngIf="isHeaderVisible">
     <h1>Recipes</h1>
   </div>
 
@@ -7,7 +7,7 @@
     <input type="checkbox">
     <span class="slider round"></span>
   </label> -->
-  <div class="filtering-switch"> <!--TODO: render styles before texts are shown-->
+  <div class="filtering-switch" *ngIf="isHeaderVisible"> <!--TODO: render styles before texts are shown-->
     <p>Filter by</p>
     <switch-button
       [(switchValue)]="filterByValue"

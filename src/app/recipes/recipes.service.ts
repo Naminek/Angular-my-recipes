@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { FilterCategory } from './categories-filter/category.model';
 
 
@@ -25,6 +25,7 @@ export class RecipesService {
     {symbol: String.fromCharCode(9830), value: 4, name: 'diamond'}
   ];
   recipesObservable: Observable<any[]>;
+  filterHeaderVisiblityChanged: Subject<boolean> = new Subject<boolean>();
 
   constructor(private db: AngularFireDatabase, private storage: AngularFireStorage) {
     this.recipesObservable = db.list('/recipes', ref => ref.orderByChild('id')).valueChanges(); // change order of the list by recipe id
@@ -32,6 +33,10 @@ export class RecipesService {
 
   addRecipe(data: any) {
     return this.db.list('/recipes').push(data);
+  }
+
+  toggleFilterHeaderVisiblity(value: boolean) {
+    this.filterHeaderVisiblityChanged.next(value);
   }
 
 }
