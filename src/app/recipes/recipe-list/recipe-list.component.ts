@@ -61,7 +61,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     return recipes;
   }
 
-  onCategoryChange() {
+  onCategoryChange(): void {
     this.category = this.recipesService.categoryFilterList.find((category: FilterCategory) => {
       return category.id == this.categoryId;
     })?.name;
@@ -71,5 +71,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     });
   }
 
+  onRecipeClick(recipe: Recipe) {
+    this.router.navigateByUrl('/recipes/recipe/' + recipe.id, { state: { recipe: recipe } });
+  }
 
 }

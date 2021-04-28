@@ -12,7 +12,7 @@
       [(ngModel)]="searchText"/>
   </div>
   <div *ngFor="let recipe of recipes | recipeTitleFilter: searchText">
-    <div class="one-recipe row">
+    <div class="one-recipe row" (click)="onRecipeClick(recipe)">
       <div class="left col-sm-8 col-12">
         <p class="title">{{recipe.title}}</p>
         <p class="description">{{recipe.description}}</p>

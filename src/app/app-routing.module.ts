@@ -7,14 +7,16 @@ import { IngredientsComponent } from './ingredients/ingredients.component';
 import { IngredientsFilterComponent } from './recipes/ingredients-filter/ingredients-filter.component';
 import { RecipeListComponent } from './recipes/recipe-list/recipe-list.component';
 import { RecipesComponent } from './recipes/recipes.component';
+import { RecipeComponent } from './recipes/recipe/recipe.component';
 
 
 const routes: Routes = [
   { path: 'recipes', component: RecipesComponent, children: [
-    { path: '', redirectTo: 'categories-filter', pathMatch: 'full' },
     { path: 'categories-filter', component: CategoriesFilterComponent },
     { path: 'ingredients-filter', component: IngredientsFilterComponent },
     { path: 'recipe-list/:name', component: RecipeListComponent },
+    { path: 'recipe/:id', component: RecipeComponent },
+    { path: '', redirectTo: 'categories-filter', pathMatch: 'full' },
   ]},
   { path: 'ingredients', component: IngredientsComponent },
   { path: 'add-recipe', component: AddRecipeComponent }

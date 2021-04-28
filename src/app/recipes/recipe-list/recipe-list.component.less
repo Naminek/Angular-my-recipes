@@ -1,6 +1,6 @@
 .recipes-list {
   .category-selection {
-    width: 350px;
+    max-width: 350px;
     margin-left: auto;
   }
   .search-engine {
@@ -21,7 +21,13 @@
     .left {
       padding: 20px;
       position: relative;
+      min-height: 180px;
+      .title {
+        font-size: large;
+        font-weight: bold;
+      }
       .time {
+        margin-top: 20px;
         position: absolute;
         bottom: 0;
         .clock {

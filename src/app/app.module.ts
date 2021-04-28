@@ -19,6 +19,7 @@ import { IngredientsFilterComponent } from './recipes/ingredients-filter/ingredi
 import { RecipeListComponent } from './recipes/recipe-list/recipe-list.component';
 import { RecipesComponent } from './recipes/recipes.component';
 import { SwitchButtonComponent } from './input/switch-button/switch-button.component';
+import { RecipeComponent } from './recipes/recipe/recipe.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { SwitchButtonComponent } from './input/switch-button/switch-button.compo
     IngredientsFilterComponent,
     RecipeListComponent,
     RecipesComponent,
-    SwitchButtonComponent
+    SwitchButtonComponent,
+    RecipeComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),
