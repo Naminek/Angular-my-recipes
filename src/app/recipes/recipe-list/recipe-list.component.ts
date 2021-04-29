@@ -13,10 +13,10 @@ import { RecipesService } from '../recipes.service';
 export class RecipeListComponent implements OnInit, OnDestroy {
   private allRecipes: Recipe[] = [];
   private category!: string | undefined;
-  categoryId!: number | undefined;
   private routeSub: Subscription;
-  recipes: Recipe[] = [];
+  categoryId!: number | undefined;
   categorySelection: any[] = [];
+  recipes: Recipe[] = [];
   searchText: string = '';
 
   constructor(route: ActivatedRoute,
@@ -41,7 +41,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         this.recipes = this.categoryId ? this.getRecipes(this.category) : this.allRecipes;
         console.log(this.recipes);
       }
-    )
+    );
   }
 
   ngOnDestroy() {

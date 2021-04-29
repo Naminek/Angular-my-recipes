@@ -21,7 +21,7 @@ export class RecipeComponent implements OnInit, OnDestroy {
       .subscribe(res => {
         this.recipe = res.recipe;
         console.log(this.recipe);
-      })
+      });
   }
 
   ngOnInit(): void {
