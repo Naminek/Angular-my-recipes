@@ -1,10 +1,19 @@
 <div class="one-recipe-detail">
-  <div class="recipe-items title">
+  <div class="recipe-items title col-12">
     <h1>{{ recipe.title }}</h1>
   </div>
 
-  <div class="recipe-items col-sm-4 col-12 recipe-image">
-    <img *ngIf="recipe.url" [src]="recipe.url" alt="recipe-image">
-    <div *ngIf="!recipe.url" class="no-img-message">No image</div>
+  <div class="row center">
+    <div class="recipe-items col-sm-4 col-12 recipe-image">
+      <img *ngIf="recipe.url" [src]="recipe.url" alt="recipe-image">
+      <div *ngIf="!recipe.url" class="no-img-message">No image</div>
+    </div>
+    <div class="recipe-items col-sm-8 col-12 ingredients">
+      <div class="one-ingredients" *ngFor="let ingredients of recipe.ingredients">
+        <span>{{ ingredients.name }}</span>
+        <span>{{ ingredients.amount }}</span>
+        <span>{{ getIngredientsSymbol(ingredients) }}</span>
+      </div>
+    </div>
   </div>
 </div>

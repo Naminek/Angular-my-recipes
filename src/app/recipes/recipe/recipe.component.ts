@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
 
-import { Recipe } from '../recipe.model';
+import { Ingredients, Recipe } from '../recipe.model';
 import { RecipesService } from '../recipes.service';
 
 @Component({
@@ -29,6 +29,16 @@ export class RecipeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.recipesService.toggleFilterHeaderVisiblity(true);
+  }
+
+  getIngredientsSymbol(ingredients: Ingredients): string | undefined {
+    if (!ingredients.additional)
+      return '';
+    const additional = this.recipesService.ingredientsAdditionalOptions.find(item => {
+      return item.value == ingredients.additional;
+    });
+    console.log(additional?.symbol);
+    return additional?.symbol;
   }
 
 }
