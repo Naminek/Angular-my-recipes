@@ -11,7 +11,7 @@ import { RecipesService } from '../recipes.service';
   styleUrls: ['./recipe.component.less']
 })
 export class RecipeComponent implements OnInit, OnDestroy {
-  private recipe!: Recipe;
+  recipe!: Recipe;
 
   constructor(private activatedRoute: ActivatedRoute,
               private recipesService: RecipesService) {
