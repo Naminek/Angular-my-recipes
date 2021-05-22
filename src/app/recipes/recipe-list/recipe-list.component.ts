@@ -29,8 +29,6 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       this.categoryId = this.recipesService.categoryFilterList.find((category: FilterCategory) => {
         return category.name == this.category;
       })?.id;
-      // console.log(params);
-      // this.categoryId = +params['categoryId']; // (+) converts string 'categoryId' to a number
    });
   }
 
@@ -72,7 +70,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   onRecipeClick(recipe: Recipe) {
-    this.router.navigateByUrl('/recipes/recipe/' + recipe.id, { state: { recipe: recipe } });
+    this.router.navigateByUrl('/recipes/recipe/' + recipe.id);
+    // this.router.navigateByUrl('/recipes/recipe/' + recipe.id, { state: { recipe: recipe } });
   }
 
 }

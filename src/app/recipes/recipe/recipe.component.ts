@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 
 import { Ingredients, Recipe } from '../recipe.model';
@@ -11,17 +11,26 @@ import { RecipesService } from '../recipes.service';
   styleUrls: ['./recipe.component.less']
 })
 export class RecipeComponent implements OnInit, OnDestroy {
-  recipe!: Recipe;
+  recipe: Recipe | undefined;
+  allRecipes: Recipe[] = [];
+  recipeId!: number;
 
   constructor(private activatedRoute: ActivatedRoute,
-              private recipesService: RecipesService) {
+              private recipesService: RecipesService,
+              private router: Router) {
+    this.recipesService.recipesObservable.subscribe((res: Recipe[]) => {
+      this.allRecipes = res;
+      this.updateRecipe();
+    });
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        if (event.urlAfterRedirects.includes('/recipes/recipe/')) {
+          this.recipeId = this.activatedRoute.snapshot.params.id;
+          this.updateRecipe();
+        }
+      }
+    });
     this.recipesService.toggleFilterHeaderVisiblity(false);
-    this.activatedRoute.paramMap
-      .pipe(map(() => window.history.state))
-      .subscribe(res => {
-        this.recipe = res.recipe;
-        console.log(this.recipe);
-      });
   }
 
   ngOnInit(): void {
@@ -37,8 +46,15 @@ export class RecipeComponent implements OnInit, OnDestroy {
     const additional = this.recipesService.ingredientsAdditionalOptions.find(item => {
       return item.value == ingredients.additional;
     });
-    console.log(additional?.symbol);
     return additional?.symbol;
+  }
+
+  updateRecipe():void {
+    if (!this.recipeId)
+      return;
+    this.recipe = this.allRecipes.find((recipe: Recipe) => {
+      return recipe.id == this.recipeId;
+    });
   }
 
 }

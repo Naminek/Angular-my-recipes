@@ -4,6 +4,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TooltipModule } from 'ng2-tooltip-directive';
 
@@ -18,8 +19,8 @@ import { IngredientsComponent } from './ingredients/ingredients.component';
 import { IngredientsFilterComponent } from './recipes/ingredients-filter/ingredients-filter.component';
 import { RecipeListComponent } from './recipes/recipe-list/recipe-list.component';
 import { RecipesComponent } from './recipes/recipes.component';
-import { SwitchButtonComponent } from './input/switch-button/switch-button.component';
 import { RecipeComponent } from './recipes/recipe/recipe.component';
+import { SwitchButtonComponent } from './input/switch-button/switch-button.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,11 @@ import { RecipeComponent } from './recipes/recipe/recipe.component';
     ReactiveFormsModule,
     TooltipModule.forRoot(DefaultTooltipOptions)
   ],
-  providers: [],
+  providers: [
+    {
+      provide: LocationStrategy, useClass: HashLocationStrategy,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
