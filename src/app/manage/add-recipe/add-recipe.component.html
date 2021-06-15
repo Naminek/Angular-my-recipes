@@ -25,7 +25,7 @@
       <div class="recipe-items col-sm-4 col-12 upload-image">
         <div class="mb-2">
           <label for="uploadFiles" class="btn btn-outline-secondary btn-sm d-inline">Select a File</label>
-          <button *ngIf="tempImgUrl" type="button" class="btn btn-secondary btn-sm float-right" tooltip="Remove" (click)="onRemoveImg()">×</button>
+          <button *ngIf="tempImgUrl" type="button" class="btn btn-secondary btn-sm float-right" tooltip="Remove" (click)="onRemoveImgClick()">×</button>
         </div>
         <input type="file" (change)="onFileSelected($event)" id="uploadFiles" accept=".png,.jpg,.jpeg" style="display:none;" />
         <div class="img-area">

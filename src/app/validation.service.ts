@@ -30,7 +30,6 @@ export class ValidationService {
 
   minSelectionCategory(min: number) {
     return (control: AbstractControl): {[key: string]: any} | null => {
-      console.log(control)
       const selected = control.value.filter((category: any) => {
         return category.value;
       });

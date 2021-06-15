@@ -57,22 +57,8 @@ export class AddRecipeComponent implements OnInit {
     }
 
   ngOnInit(): void {
-
     this.recipeForm = this.buildRecipeForm();
     console.log(this.recipeForm)
-
-    this.ingredientsControls.forEach(control => {
-      control.valueChanges.subscribe(x => {
-        console.log(x);
-      })
-    })
-    this.recipeForm.valueChanges.subscribe(form => {
-      console.log(form);
-    })
-
-    // this.recipeForm.controls['item'].valueChanges.subscribe(control => {
-    //   console.log(control);
-    // })
   }
 
   buildRecipeForm() {
@@ -150,7 +136,6 @@ export class AddRecipeComponent implements OnInit {
       this.ingredientsControls.splice(0, 1, this.createIngredientsForm());
       return;
     }
-    console.log(this.ingredientsControls)
     this.ingredientsControls.splice(index, 1);
   }
 
@@ -189,11 +174,12 @@ export class AddRecipeComponent implements OnInit {
     this.newRecipeId = 0;
 
     this.recipesService.addRecipe(data).then((res: any) => {
-      console.log(res);
       const recipePath = res.path.pieces_.join('/');
       this.recipeForm.reset();
       this.recipeForm = this.buildRecipeForm();
+      this.removeImage();
       this.submitted = false;
+      // TODO: add uploading process
       if (this.currentFileUpload) {
         this.fileUploadService.pushImageToStorage(recipePath, this.currentFileUpload, newRecipeId).subscribe(
           percentage => {
@@ -207,13 +193,11 @@ export class AddRecipeComponent implements OnInit {
           }
         );
       }
-    })
-
+    });
   }
 
   onAddIngredientsClick(): void {
     (this.recipeForm.get('ingredients') as FormArray).push(this.createIngredientsForm());
-    console.log(this.ingredientsControls)
   }
 
   onAddStepsClick(): void {
@@ -253,11 +237,8 @@ export class AddRecipeComponent implements OnInit {
     this.currentFileUpload = new FileUpload(file);
   }
 
-  onRemoveImg() {
-    this.selectedFiles = undefined;
-    console.log(this.selectedFiles);
-    this.tempImgUrl = '';
-    this.currentFileUpload = undefined;
+  onRemoveImgClick() {
+    this.removeImage();
   }
 
   onUpIngredients(index: number): void {
@@ -276,6 +257,12 @@ export class AddRecipeComponent implements OnInit {
     this.stepsControls.splice(index, 1);
     this.stepsControls.splice(index - 1, 0, item);
     this.changeStepsTableRowColor(index);
+  }
+
+  private removeImage(): void {
+    this.selectedFiles = undefined;
+    this.tempImgUrl = '';
+    this.currentFileUpload = undefined;
   }
 
 }
