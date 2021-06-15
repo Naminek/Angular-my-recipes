@@ -30,5 +30,17 @@
         </table>
       </div>
     </div>
+
+    <div class="recipe-items steps">
+      <p class="font-weight-bold item-name">Steps</p>
+      <table class="table table-sm">
+        <tbody>
+          <tr *ngFor="let step of recipe.steps let i = index;" [id]="'step' + i">
+            <td class="step-number" style="width: 10%;">{{ i }}</td>
+            <td style="width: 90%;">{{ step.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

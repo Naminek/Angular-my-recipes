@@ -6,6 +6,10 @@ export interface Ingredients {
   additional: number;
 }
 
+export interface Steps {
+  description: string;
+}
+
 export interface Recipe {
   ingredients: Ingredients[];
   added: number;
@@ -13,7 +17,7 @@ export interface Recipe {
   comments: string;
   url: string;
   modified: number;
-  steps: string[];
+  steps: Steps[];
   title: string;
   id: number;
   timeEstimation: number;
