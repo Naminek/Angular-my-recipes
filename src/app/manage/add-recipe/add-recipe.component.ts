@@ -177,9 +177,9 @@ export class AddRecipeComponent implements OnInit {
       const recipePath = res.path.pieces_.join('/');
       this.recipeForm.reset();
       this.recipeForm = this.buildRecipeForm();
-      this.removeImage();
       this.submitted = false;
       // TODO: add uploading process
+      // TODO: remove image after uploaded.
       if (this.currentFileUpload) {
         this.fileUploadService.pushImageToStorage(recipePath, this.currentFileUpload, newRecipeId).subscribe(
           percentage => {
