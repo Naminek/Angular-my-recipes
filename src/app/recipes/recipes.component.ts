@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { RoutingService } from '../routing.service';
 import { RecipesService } from './recipes.service';
 
@@ -8,10 +9,11 @@ import { RecipesService } from './recipes.service';
   templateUrl: './recipes.component.html',
   styleUrls: ['./recipes.component.less']
 })
-export class RecipesComponent implements OnInit {
+export class RecipesComponent implements OnInit, OnDestroy {
   filterOptions: string[] = ['categories', 'ingredients']; // categories: false, ingredients: true in switch button
   filterByValue: boolean = false; // true if ingredients-filter is selected
   filterBy: string = '';
+  filterSubscription: Subscription;
   isHeaderVisible: boolean = true;
 
   constructor(
@@ -23,7 +25,7 @@ export class RecipesComponent implements OnInit {
   {
     this.filterByValue = routingService.recipesRouterLink == 'ingredients-filter';
     this.filterBy = routingService.recipesRouterLink;
-    this.recipesService.filterHeaderVisiblityChanged.subscribe((value: boolean) => {
+    this.filterSubscription = this.recipesService.filterHeaderVisiblityChanged.subscribe((value: boolean) => {
       this.isHeaderVisible = value;
     });
 
@@ -39,8 +41,6 @@ export class RecipesComponent implements OnInit {
           }
       }
       // if (event instanceof NavigationError) {
-      //     // Hide loading indicator
-
       //     // Present error to user
       //     console.log(event.error);
       // }
@@ -53,7 +53,10 @@ export class RecipesComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.recipesService.recipesObservable);
+  }
 
+  ngOnDestroy(): void {
+    this.filterSubscription.unsubscribe();
   }
 
   navigateRoute(): void {
