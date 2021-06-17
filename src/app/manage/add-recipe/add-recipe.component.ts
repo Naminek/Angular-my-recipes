@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -13,13 +13,14 @@ import { ValidationService } from 'src/app/validation.service';
   templateUrl: './add-recipe.component.html',
   styleUrls: ['./add-recipe.component.less']
 })
-export class AddRecipeComponent implements OnInit {
+export class AddRecipeComponent implements OnInit, OnDestroy {
   additionalOptions: any;
-  currentFileUpload: FileUpload | undefined;
-  newRecipeId!: number;
+  private currentFileUpload: FileUpload | undefined;
+  private newRecipeId!: number;
   percentage!: number;
   recipeForm!: FormGroup;
-  selectedFiles: FileList | undefined;
+  recipesSubscription: Subscription;
+  private selectedFiles: FileList | undefined;
   steps!: FormArray;
   submitted: boolean = false;
   tempImgUrl: string | ArrayBuffer | null = '';
@@ -50,8 +51,11 @@ export class AddRecipeComponent implements OnInit {
     private validationService: ValidationService,
     private recipesService: RecipesService) {
       this.additionalOptions = this.recipesService.ingredientsAdditionalOptions;
-      this.recipesService.recipesObservable.subscribe((res: Recipe[]) => {
+      this.recipesSubscription = this.recipesService.recipesObservable.subscribe((res: Recipe[]) => {
           this.newRecipeId = res[res.length - 1].id + 1;
+        },
+        (error: any) => {
+          // TODO: error handling
         }
       )
     }
@@ -59,6 +63,10 @@ export class AddRecipeComponent implements OnInit {
   ngOnInit(): void {
     this.recipeForm = this.buildRecipeForm();
     console.log(this.recipeForm)
+  }
+
+  ngOnDestroy(): void {
+    this.recipesSubscription.unsubscribe();
   }
 
   buildRecipeForm() {

@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Ingredients, Recipe } from '../recipe.model';
@@ -11,18 +12,20 @@ import { RecipesService } from '../recipes.service';
   styleUrls: ['./recipe.component.less']
 })
 export class RecipeComponent implements OnInit, OnDestroy {
-  recipe: Recipe | undefined;
   allRecipes: Recipe[] = [];
+  recipe: Recipe | undefined;
   recipeId!: number;
+  recipesSubscription: Subscription;
+  routerSubscription: Subscription;
 
   constructor(private activatedRoute: ActivatedRoute,
               private recipesService: RecipesService,
               private router: Router) {
-    this.recipesService.recipesObservable.subscribe((res: Recipe[]) => {
+    this.recipesSubscription = this.recipesService.recipesObservable.subscribe((res: Recipe[]) => {
       this.allRecipes = res;
       this.updateRecipe();
     });
-    this.router.events.subscribe(event => {
+    this.routerSubscription = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         if (event.urlAfterRedirects.includes('/recipes/recipe/')) {
           this.recipeId = this.activatedRoute.snapshot.params.id;
@@ -38,6 +41,8 @@ export class RecipeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.recipesService.toggleFilterHeaderVisiblity(true);
+    this.recipesSubscription.unsubscribe();
+    this.routerSubscription.unsubscribe();
   }
 
   getIngredientsSymbol(ingredients: Ingredients): string | undefined {

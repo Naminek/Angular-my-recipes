@@ -18,16 +18,8 @@ export class CategoriesFilterComponent implements OnInit {
     { id: 4, name: 'Vegan', image: '../../../assets/vegan.jpg' },
     { id: 5, name: 'Sweets', image: '../../../assets/sweets.jpg' },
   ];
-  // recipes: Recipe[] = [];
 
-  constructor(recipesService: RecipesService) {
-    // recipesService.recipesObservable.subscribe(
-    //   (res: any) => {
-    //     console.log(res);
-    //     this.recipes = res;
-    //   }
-    // )
-  }
+  constructor() {}
 
   ngOnInit(): void {
     const date = new Date();
@@ -35,10 +27,6 @@ export class CategoriesFilterComponent implements OnInit {
     console.log(date)
     console.log(time)
     console.log(new Date(time))
-  }
-
-  onCategoryClick(category: Category) {
-    console.log(category.id);
   }
 
 }
