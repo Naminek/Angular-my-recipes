@@ -59,8 +59,8 @@
               <td><input class="form-control form-control-sm" formControlName="name" type="text"></td>
               <td><input class="form-control form-control-sm" formControlName="amount" type="text"></td>
               <!-- <td class="star"><input type="checkbox" id="star" formControlName="mark" /><label for="star"></label></td> -->
-              <td><select formControlName="additional" class="form-control form-control-sm"><option *ngFor="let o of additionalOptions" [ngValue]="o.value">{{ o.symbol }}</option></select></td>
-              <!-- <td><select formControlName="additional"ng-option=""><option *ngFor="let o of additionalOptions" [ngValue]="o.value">{{ o.symbol }}</option></select></td> -->
+              <td><select formControlName="additional" class="form-control form-control-sm"><option *ngFor="let o of ingredientsAdditionalOptions" [ngValue]="o.value">{{ o.symbol }}</option></select></td>
+              <!-- <td><select formControlName="additional"ng-option=""><option *ngFor="let o of ingredientsAdditionalOptions" [ngValue]="o.value">{{ o.symbol }}</option></select></td> -->
               <td>
                 <button
                   type="button"

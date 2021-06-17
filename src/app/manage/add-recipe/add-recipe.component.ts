@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { FileUpload } from 'src/app/data.model';
@@ -14,12 +15,14 @@ import { ValidationService } from 'src/app/validation.service';
   styleUrls: ['./add-recipe.component.less']
 })
 export class AddRecipeComponent implements OnInit, OnDestroy {
-  additionalOptions: any;
+  ingredientsAdditionalOptions: any;
   private currentFileUpload: FileUpload | undefined;
   private newRecipeId!: number;
   percentage!: number;
   recipeForm!: FormGroup;
+  recipeToEdit: Recipe;
   recipesSubscription: Subscription;
+  pageType: string = 'add';
   private selectedFiles: FileList | undefined;
   steps!: FormArray;
   submitted: boolean = false;
@@ -49,8 +52,12 @@ export class AddRecipeComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private fileUploadService: FileUploadService,
     private validationService: ValidationService,
-    private recipesService: RecipesService) {
-      this.additionalOptions = this.recipesService.ingredientsAdditionalOptions;
+    private recipesService: RecipesService,
+    private router: Router) {
+      this.recipeToEdit = this.router.getCurrentNavigation()?.extras.state?.recipe;
+      // this.pageType = this.recipeToEdit ? 'edit' : 'add'; // if a recipe to edit is not found, the page should be add new recipe;
+      console.log(this.recipeToEdit);
+      this.ingredientsAdditionalOptions = this.recipesService.ingredientsAdditionalOptions;
       this.recipesSubscription = this.recipesService.recipesObservable.subscribe((res: Recipe[]) => {
           this.newRecipeId = res[res.length - 1].id + 1;
         },
@@ -63,6 +70,7 @@ export class AddRecipeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.recipeForm = this.buildRecipeForm();
     console.log(this.recipeForm)
+    // TODO: set value if there is data
   }
 
   ngOnDestroy(): void {

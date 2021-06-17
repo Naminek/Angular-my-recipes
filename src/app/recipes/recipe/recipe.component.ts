@@ -54,7 +54,11 @@ export class RecipeComponent implements OnInit, OnDestroy {
     return additional?.symbol;
   }
 
-  updateRecipe():void {
+  onEditClick(): void {
+    this.router.navigateByUrl('edit-recipe/' + this.recipeId, { state: { recipe: this.recipe } });
+  }
+
+  updateRecipe(): void {
     if (!this.recipeId)
       return;
     this.recipe = this.allRecipes.find((recipe: Recipe) => {

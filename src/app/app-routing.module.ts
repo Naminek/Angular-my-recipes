@@ -19,6 +19,7 @@ const routes: Routes = [
     // { path: '', redirectTo: 'categories-filter', pathMatch: 'full' },
   ]},
   { path: 'ingredients', component: IngredientsComponent },
+  { path: 'edit-recipe/:id', component: AddRecipeComponent },
   { path: 'add-recipe', component: AddRecipeComponent }
   // { path: '**', component: PageNotFoundComponent }
 ];

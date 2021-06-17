@@ -1,6 +1,7 @@
 <div class="one-recipe-detail">
   <div *ngIf="!recipe">Recipe Not Found</div>
   <div *ngIf="recipe">
+    <button class="btn btn-outline-secondary edit-button" (click)="onEditClick()">Edit Recipe</button>
     <div class="recipe-items title col-12">
       <h1>{{ recipe.title }}</h1>
       <p><i class="clock"></i><span>{{ recipe.timeEstimation }}</span>minutes</p>
