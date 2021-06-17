@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 
 import { FileUpload } from 'src/app/data.model';
 import { FileUploadService } from 'src/app/file-upload.service';
-import { Recipe } from 'src/app/recipes/recipe.model';
+import { Ingredients, Recipe, Steps } from 'src/app/recipes/recipe.model';
 import { RecipesService } from 'src/app/recipes/recipes.service';
 import { ValidationService } from 'src/app/validation.service';
 
@@ -64,12 +64,23 @@ export class AddRecipeComponent implements OnInit, OnDestroy {
         (error: any) => {
           // TODO: error handling
         }
-      )
+      );
     }
 
   ngOnInit(): void {
     this.recipeForm = this.buildRecipeForm();
     console.log(this.recipeForm)
+    if (this.recipeToEdit) {
+      this.recipeForm.patchValue(this.recipeToEdit);
+      this.stepsControls.length = 0;
+      this.recipeToEdit.steps.forEach((step: Steps) => {
+        this.stepsControls.push(this.createStepsForm(step.description));
+      });
+      this.ingredientsControls.length = 0;
+      this.recipeToEdit.ingredients.forEach((ingredients: Ingredients) => {
+        this.ingredientsControls.push(this.createIngredientsForm(ingredients.name, ingredients.amount, ingredients.additional))
+      });
+    }
     // TODO: set value if there is data
   }
 
@@ -85,10 +96,10 @@ export class AddRecipeComponent implements OnInit, OnDestroy {
       ]),
       description: '',
       ingredients: this.formBuilder.array(
-        [this.createIngredientsForm()],
+        [this.createIngredientsForm('', '', 0)],
         this.validationService.emptyIngredientsNotAllowed()
       ),
-      steps: this.formBuilder.array([this.createStepsForm()]),
+      steps: this.formBuilder.array([this.createStepsForm('')]),
       category: this.formBuilder.array([
         this.createCategoryForm(1, 'Meat'),
         this.createCategoryForm(2, 'Seafood'),
@@ -132,24 +143,24 @@ export class AddRecipeComponent implements OnInit, OnDestroy {
     })
   }
 
-  createIngredientsForm(): FormGroup {
+  createIngredientsForm(name: string, amount: string, additional: number): FormGroup {
     return this.formBuilder.group({
-      name: '',
-      amount: '',
-      additional: 0
+      name: name,
+      amount: amount,
+      additional: additional
     },
     { validators: this.validationService.amountRequired() });
   }
 
-  createStepsForm(): FormGroup {
+  createStepsForm(description: string): FormGroup {
     return this.formBuilder.group({
-      description: ''
+      description: description
     });
   }
 
   deleteIngredientsRow(index: number): void {
     if (this.ingredientsControls.length == 1) {
-      this.ingredientsControls.splice(0, 1, this.createIngredientsForm());
+      this.ingredientsControls.splice(0, 1, this.createIngredientsForm('', '', 0));
       return;
     }
     this.ingredientsControls.splice(index, 1);
@@ -157,7 +168,7 @@ export class AddRecipeComponent implements OnInit, OnDestroy {
 
   deleteStepsRow(index: number): void {
     if (this.stepsControls.length == 1) {
-      this.stepsControls.splice(0, 1, this.createStepsForm());
+      this.stepsControls.splice(0, 1, this.createStepsForm(''));
       return;
     }
     this.stepsControls.splice(index, 1);
@@ -213,11 +224,11 @@ export class AddRecipeComponent implements OnInit, OnDestroy {
   }
 
   onAddIngredientsClick(): void {
-    (this.recipeForm.get('ingredients') as FormArray).push(this.createIngredientsForm());
+    (this.recipeForm.get('ingredients') as FormArray).push(this.createIngredientsForm('', '', 0));
   }
 
   onAddStepsClick(): void {
-    (this.recipeForm.get('steps') as FormArray).push(this.createStepsForm());
+    (this.recipeForm.get('steps') as FormArray).push(this.createStepsForm(''));
   }
 
   onDownIngredients(index: number): void {

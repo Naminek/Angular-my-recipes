@@ -140,7 +140,7 @@
     </div>
 
     <div class="row submit-button">
-      <div class="col-sm-12">
+      <div class="col-sm-12" *ngIf="!recipeToEdit">
         <button class="btn btn-secondary float-right" type="submit" [disabled]="!recipeForm.valid">Add</button>
       </div>
     </div>
