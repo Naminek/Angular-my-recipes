@@ -17,7 +17,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class SwitchButtonComponent implements OnInit {
   @Input() options!: string[];
   @Input() switchValue!: boolean;
-  @Output() switchValueChange: EventEmitter<boolean> = new EventEmitter();
+  @Output() switchValueChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor() { }
 

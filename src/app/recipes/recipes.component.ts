@@ -46,7 +46,6 @@ export class RecipesComponent implements OnInit, OnDestroy {
       // }
   });
 
-    this.onSarchByValueChanged();
   }
 
 
@@ -63,8 +62,8 @@ export class RecipesComponent implements OnInit, OnDestroy {
     this.router.navigate(['recipes/' + this.filterBy]);
   }
 
-  onSarchByValueChanged(): void {
-    this.filterBy = this.filterByValue ? 'ingredients-filter' : 'categories-filter';
+  onSarchByValueChanged(isIngredientsFilter: boolean): void {
+    this.filterBy = isIngredientsFilter ? 'ingredients-filter' : 'categories-filter';
     this.routingService.recipesRouterLink = this.filterBy;
     this.navigateRoute();
   }
